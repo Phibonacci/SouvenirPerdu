@@ -1,4 +1,5 @@
 import RoomScene from "./scenes/room-scene.js";
+import GrayscalePipeline from "./pipelines/grayscale.js";
 
 export default class Game extends Phaser.Game {
 	constructor() {
@@ -11,6 +12,7 @@ export default class Game extends Phaser.Game {
 				autoCenter: Phaser.Scale.CENTER_BOTH,
 			},
 			scene: [RoomScene],
+			pipeline: { GrayscalePipeline },
 		});
 	}
 }
