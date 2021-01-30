@@ -1,5 +1,5 @@
-import GrayscalePipeline from "../pipelines/grayscale.js";
 import BlurPostFX from "../pipelines/blur.js";
+import InteractiveEntity from "../entities/interactive-entity.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -9,10 +9,10 @@ export default class RoomScene extends Phaser.Scene {
 	preload() {
 		console.log("Preloading assets...");
 
-		this.load.image("background", "assets/tests/background.png");
-		this.load.image("fish", "assets/tests/fish.png");
+		this.load.image("background", "assets/background.png");
+		this.load.image("glasses", "assets/glasses.png");
 
-		this.load.audio("test-music", "assets/tests/music.ogg");
+		this.load.audio("test-music", "assets/music.ogg");
 	}
 
 	create() {
@@ -22,52 +22,36 @@ export default class RoomScene extends Phaser.Scene {
 		this.background.setOrigin(0, 0);
 		this.background.setInteractive();
 
-		this.background.tint = 0x0c1445;
 		this.background.scale = 0.7;
 
 		this.isZoomedIn = false;
+		this.selectedEntity = null;
 
-		this.fish = this.add.sprite(250, 1020, "fish");
-		this.fish.scale = 0.5;
-		this.fish.setInteractive({
-			useHandCursor: true,
-			pixelPerfect: false,
-		});
-		this.fish.on("pointerover", () => {
-			if (!this.isZoomedIn) {
-				this.fish.tint = 0x444444;
-			}
-		});
-		this.fish.on("pointerout", () => {
-			this.fish.tint = 0xffffff;
-		});
+		this.createEntities();
 
-		this.fish.on("pointerdown", (pointer) => {
-			if (pointer.leftButtonDown()) {
-				this.fish.tint = 0xffffff;
-				this.isZoomedIn = true;
-				this.cameras.main.zoomTo(3.0, 1000, "Power1", true);
-			}
-		});
+		for (const entity of this.entities) {
+			this.add.existing(entity);
+
+			entity.on("pointerdown", (pointer) => {
+				if (pointer.leftButtonDown()) {
+					if (this.isZoomedIn) {
+						this.useEntity(entity);
+					} else {
+						this.selectEntity(entity);
+					}
+				}
+			});
+		}
 
 		this.input.on("pointerdown", (pointer) => {
 			if (pointer.rightButtonDown() && this.isZoomedIn) {
-				if (!this.music.isPlaying) {
-					this.music.play({ loop: true });
-				}
-				this.background.tint = 0xffffff;
-				this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
-					this.background.removePostPipeline(BlurPostFX);
-					if (progress >= 0.3) {
-						this.isZoomedIn = false;
-					}
-				});
+				this.unselectEntity();
 			}
 		});
 
 		this.input.mouse.disableContextMenu();
 
-		this.music = this.sound.add("test-music", { volume: 0.2 });
+		this.music = this.sound.add("test-music");
 		for (let i = 0; i < 10; i++) {
 			this.background.setPostPipeline(BlurPostFX);
 		}
@@ -80,7 +64,7 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	update() {
-		if (!this.isZoomedIn) {
+		if (!this.selectedEntity) {
 			this.cameras.main.pan(
 				(game.input.mousePointer.x * this.background.width * this.background.scale) / this.game.config.width,
 				(game.input.mousePointer.y * this.background.height * this.background.scale) / this.game.config.height,
@@ -89,7 +73,44 @@ export default class RoomScene extends Phaser.Scene {
 				true
 			);
 		} else {
-			this.cameras.main.centerOn(this.fish.x, this.fish.y);
+			this.cameras.main.centerOn(this.selectedEntity.x, this.selectedEntity.y);
 		}
+	}
+
+	createEntities() {
+		this.glasses = new InteractiveEntity(this, 150, 1520, "glasses");
+		this.glasses.scale = 0.1;
+
+		this.entities = [this.glasses];
+	}
+
+	selectEntity(entity) {
+		this.isZoomedIn = true;
+		this.selectedEntity = entity;
+		this.cameras.main.zoomTo(3.0, 1000, "Power1", true);
+	}
+
+	useEntity(entity) {
+		if (entity === this.glasses) {
+			this.background.removePostPipeline(BlurPostFX);
+			this.music.volume = 0;
+			this.tweens.add({
+				targets: this.music,
+				volume: 0.2,
+				duration: 2000,
+			});
+			this.music.play({ loop: true });
+			this.glasses.destroy();
+		}
+		this.unselectEntity();
+	}
+
+	unselectEntity() {
+		this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
+			if (progress >= 0.3) {
+				this.isZoomedIn = false;
+				this.selectedEntity = null;
+			}
+		});
 	}
 }
