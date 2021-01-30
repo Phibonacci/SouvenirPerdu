@@ -1,4 +1,3 @@
-import SharderScene from "./scenes/shader-scene.js";
 import RoomScene from "./scenes/room-scene.js";
 import GrayscalePipeline from "./pipelines/grayscale.js";
 import BlurPostFX from "./pipelines/blur.js";
