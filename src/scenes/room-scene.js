@@ -36,13 +36,13 @@ export default class RoomScene extends Phaser.Scene {
 		this.fish.on("pointerdown", (pointer) => {
 			if (pointer.leftButtonDown()) {
 				this.isZoomedIn = true;
-				this.cameras.main.zoomTo(3.0, 500, "Power2", false);
+				this.cameras.main.zoomTo(3.0, 800, "Power2", true);
 			}
 		});
 
 		this.input.on("pointerdown", (pointer) => {
 			if (pointer.rightButtonDown()) {
-				this.cameras.main.zoomTo(1.0, 500, "Power2", false, (_, progress) => {
+				this.cameras.main.zoomTo(1.0, 800, "Power2", true, (_, progress) => {
 					if (progress >= 0.99) {
 						this.isZoomedIn = false;
 					}
@@ -55,9 +55,12 @@ export default class RoomScene extends Phaser.Scene {
 
 	update() {
 		if (!this.isZoomedIn) {
-			this.cameras.main.centerOn(
+			this.cameras.main.pan(
 				(game.input.mousePointer.x * 1920) / 1024,
-				(game.input.mousePointer.y * 1080) / 600
+				(game.input.mousePointer.y * 1080) / 600,
+				500,
+				"Power1",
+				true
 			);
 		} else {
 			this.cameras.main.centerOn(this.fish.x, this.fish.y);
