@@ -21,13 +21,9 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	update_light() {
-		const camera_anchor_x =
-			this.spotlight_settings.position.x - this.cameras.main.worldView.left + this.cameras.main.worldView.width / 2;
-		const camera_anchor_y =
-			this.spotlight_settings.position.y - this.cameras.main.worldView.top + this.cameras.main.worldView.height / 2;
-		this.spotlight.set1f("tx", camera_anchor_x / this.renderer.width);
-		this.spotlight.set1f("ty", 1 - camera_anchor_y / this.renderer.height);
-		this.spotlight.set1f("r", this.spotlight_settings.ray);
+		this.spotlight.set1f("tx", this.spotlight_settings.position.x / this.background.width);
+		this.spotlight.set1f("ty", this.spotlight_settings.position.y / this.background.height);
+		this.spotlight.set1f("r", this.spotlight_settings.ray * this.cameras.main.zoom);
 		this.spotlight.set2f("resolution", this.game.config.width, this.game.config.height);
 	}
 
@@ -40,11 +36,10 @@ export default class RoomScene extends Phaser.Scene {
 		this.spotlight = new SpotlightPostFX(this.game);
 		this.game.renderer.pipelines.add("Spotlight", this.spotlight);
 		this.spotlight_settings = {
-			position: { x: 0, y: this.renderer.height },
+			position: { x: 0, y: this.background.height },
 			ray: 0.3,
 		};
 		this.update_light();
-		this.spotlight_settings.ray = 0.9;
 		this.background.setPipeline(this.spotlight);
 
 		this.background.scale = 0.7;
@@ -95,11 +90,11 @@ export default class RoomScene extends Phaser.Scene {
 				"Power1",
 				true
 			);
-			if (this.spotlight_settings) {
-				this.update_light();
-			}
 		} else {
 			this.cameras.main.centerOn(this.selectedEntity.x, this.selectedEntity.y);
+		}
+		if (this.spotlight_settings) {
+			this.update_light();
 		}
 	}
 
@@ -134,10 +129,12 @@ export default class RoomScene extends Phaser.Scene {
 			});
 			this.music.play({ loop: true });
 			this.glasses.destroy();
+			this.spotlight_settings.ray = 0.8;
 			this.selectedEntity = null;
 		}
 		if (entity === this.padlock) {
 			this.padlock.destroy();
+			this.spotlight_settings.ray = 10;
 			this.selectedEntity = null;
 		}
 		this.unselectEntity();

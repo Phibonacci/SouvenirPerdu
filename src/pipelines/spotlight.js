@@ -13,12 +13,10 @@ vec3 makeCircle(vec2 st,vec2 center, vec3 col){
 	return vec3(1.0-pct)*col;
 }
 void main(void) {
-	vec2 st = vec2(gl_FragCoord.x/resolution.x,gl_FragCoord.y/resolution.y);
 	vec4 color = texture2D(uMainSampler, outTexCoord);
-	gl_FragColor = color*vec4(makeCircle(st,vec2(tx,ty),vec3(1.0)),1.0);
+	gl_FragColor = color*vec4(makeCircle(outTexCoord,vec2(tx,ty),vec3(1.0)),1.0);
 }
 `;
-
 export default class SpotlightPostFX extends Phaser.Renderer.WebGL.Pipelines.SinglePipeline {
 	constructor(game) {
 		super({
