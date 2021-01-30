@@ -20,14 +20,13 @@ export default class RoomScene extends Phaser.Scene {
 		this.background = this.add.sprite(0, 0, "background");
 		this.background.setOrigin(0, 0);
 		this.background.setInteractive();
-		this.background.setPostPipeline(GrayscalePipeline);
-		this.cameras.main.setBounds(0, 0, 1920, 1080);
 
-		this.cameras.main.tint = 0x000000;
+		this.background.tint = 0x0c1445;
+		this.background.scale = 0.7;
 
 		this.isZoomedIn = false;
 
-		this.fish = this.add.sprite(200, 1000, "fish");
+		this.fish = this.add.sprite(250, 1020, "fish");
 		this.fish.scale = 0.5;
 		this.fish.setInteractive({
 			useHandCursor: true,
@@ -55,7 +54,7 @@ export default class RoomScene extends Phaser.Scene {
 				if (!this.music.isPlaying) {
 					this.music.play({ loop: true });
 				}
-				this.background.resetPipeline(GrayscalePipeline);
+				this.background.tint = 0xffffff;
 				this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
 					if (progress >= 0.3) {
 						this.isZoomedIn = false;
@@ -66,14 +65,21 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.input.mouse.disableContextMenu();
 
-		this.music = this.sound.add("test-music", { volume: 0.5 });
+		this.music = this.sound.add("test-music", { volume: 0.2 });
+
+		this.cameras.main.setBounds(
+			0,
+			0,
+			this.background.width * this.background.scale,
+			this.background.height * this.background.scale
+		);
 	}
 
 	update() {
 		if (!this.isZoomedIn) {
 			this.cameras.main.pan(
-				(game.input.mousePointer.x * this.background.width) / this.game.config.width,
-				(game.input.mousePointer.y * this.background.height) / this.game.config.height,
+				(game.input.mousePointer.x * this.background.width * this.background.scale) / this.game.config.width,
+				(game.input.mousePointer.y * this.background.height * this.background.scale) / this.game.config.height,
 				1000,
 				"Power1",
 				true
