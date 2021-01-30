@@ -8,6 +8,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.load.image("background", "assets/tests/background.png");
 		this.load.image("fish", "assets/tests/fish.png");
+
+		this.load.audio("test-music", "assets/tests/music.ogg");
 	}
 
 	create() {
@@ -36,13 +38,13 @@ export default class RoomScene extends Phaser.Scene {
 		this.fish.on("pointerdown", (pointer) => {
 			if (pointer.leftButtonDown()) {
 				this.isZoomedIn = true;
-				this.cameras.main.zoomTo(3.0, 1000, "Power2", true);
+				this.cameras.main.zoomTo(3.0, 1000, "Power1", true);
 			}
 		});
 
 		this.input.on("pointerdown", (pointer) => {
 			if (pointer.rightButtonDown()) {
-				this.cameras.main.zoomTo(1.0, 1000, "Power2", true, (_, progress) => {
+				this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
 					if (progress >= 0.3) {
 						this.isZoomedIn = false;
 					}
@@ -51,6 +53,9 @@ export default class RoomScene extends Phaser.Scene {
 		});
 
 		this.input.mouse.disableContextMenu();
+
+		this.music = this.sound.add("test-music", { volume: 0.5 });
+		this.music.play({ loop: true });
 	}
 
 	update() {
