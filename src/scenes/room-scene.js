@@ -43,7 +43,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.input.on("pointerdown", (pointer) => {
 			if (pointer.rightButtonDown()) {
 				this.cameras.main.zoomTo(1.0, 1000, "Power2", true, (_, progress) => {
-					if (progress >= 0.5) {
+					if (progress >= 0.3) {
 						this.isZoomedIn = false;
 					}
 				});
@@ -59,7 +59,7 @@ export default class RoomScene extends Phaser.Scene {
 				(game.input.mousePointer.x * this.background.width) / this.game.config.width,
 				(game.input.mousePointer.y * this.background.height) / this.game.config.height,
 				1000,
-				"Power2",
+				"Power1",
 				true
 			);
 		} else {
