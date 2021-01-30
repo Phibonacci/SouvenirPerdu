@@ -5,7 +5,7 @@ import BlurPostFX from "./pipelines/blur.js";
 export default class Game extends Phaser.Game {
 	constructor() {
 		super({
-			type: Phaser.AUTO,
+			type: Phaser.WEBGL,
 			width: 1024,
 			height: 600,
 			scale: {

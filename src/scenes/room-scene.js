@@ -1,6 +1,7 @@
 import BlurPostFX from "../pipelines/blur.js";
 import SpotlightPostFX from "../pipelines/spotlight.js";
 import InteractiveEntity from "../entities/interactive-entity.js";
+import Padlock from "../entities/padlock.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -12,6 +13,9 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.load.image("background", "assets/background.png");
 		this.load.image("glasses", "assets/glasses.png");
+		this.load.image("digits", "assets/digits.png");
+		this.load.image("padlock", "assets/padlock.png");
+		this.load.image("padlock-unlocked", "assets/padlock-unlocked.png");
 
 		this.load.audio("test-music", "assets/music.ogg");
 	}
@@ -30,9 +34,8 @@ export default class RoomScene extends Phaser.Scene {
 	create() {
 		console.log("Creating the game...");
 
-		this.background = this.add.sprite(0, 0, "background");
+		this.background = this.add.image(0, 0, "background");
 		this.background.setOrigin(0, 0);
-		this.background.setInteractive();
 
 		this.spotlight = new SpotlightPostFX(this.game);
 		this.game.renderer.pipelines.add("Spotlight", this.spotlight);
@@ -54,13 +57,11 @@ export default class RoomScene extends Phaser.Scene {
 		for (const entity of this.entities) {
 			this.add.existing(entity);
 
-			entity.on("pointerdown", (pointer) => {
-				if (pointer.leftButtonDown()) {
-					if (this.isZoomedIn) {
-						this.useEntity(entity);
-					} else {
-						this.selectEntity(entity);
-					}
+			entity.on("selected", () => {
+				if (this.isZoomedIn) {
+					this.useEntity(entity);
+				} else {
+					this.selectEntity(entity);
 				}
 			});
 		}
@@ -106,7 +107,14 @@ export default class RoomScene extends Phaser.Scene {
 		this.glasses = new InteractiveEntity(this, 150, 1520, "glasses");
 		this.glasses.scale = 0.1;
 
-		this.entities = [this.glasses];
+		this.padlock = new Padlock(this, 1700, 1000, "517");
+		this.add.existing(this.padlock);
+
+		this.padlock.on("unlocked", () => {
+			this.useEntity(this.padlock);
+		});
+
+		this.entities = [this.glasses, this.padlock];
 	}
 
 	selectEntity(entity) {
@@ -126,11 +134,19 @@ export default class RoomScene extends Phaser.Scene {
 			});
 			this.music.play({ loop: true });
 			this.glasses.destroy();
+			this.selectedEntity = null;
+		}
+		if (entity === this.padlock) {
+			this.padlock.destroy();
+			this.selectedEntity = null;
 		}
 		this.unselectEntity();
 	}
 
 	unselectEntity() {
+		if (this.selectedEntity) {
+			this.selectedEntity.unselect();
+		}
 		this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
 			if (progress >= 0.3) {
 				this.isZoomedIn = false;

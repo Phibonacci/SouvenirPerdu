@@ -5,13 +5,21 @@ export default class InteractiveEntity extends Phaser.GameObjects.Sprite {
 		this.on("pointerover", () => {
 			this.tint = 0x808080;
 		});
+
 		this.on("pointerout", () => {
 			this.tint = 0xffffff;
 		});
 
-		this.setInteractive({
-			useHandCursor: true,
-			pixelPerfect: false,
+		this.on("pointerdown", (pointer) => {
+			if (pointer.leftButtonDown()) {
+				this.emit("selected");
+			}
 		});
+
+		this.setInteractive({ useHandCursor: true });
+	}
+
+	unselect() {
+		this.tint = 0xffffff;
 	}
 }
