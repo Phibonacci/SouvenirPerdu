@@ -3,7 +3,7 @@ export default class InteractiveEntity extends Phaser.GameObjects.Sprite {
 		super(scene, x, y, texture);
 
 		this.on("pointerover", () => {
-			this.tint = 0xff0000;
+			this.tint = 0x808080;
 		});
 		this.on("pointerout", () => {
 			this.tint = 0xffffff;
