@@ -1,4 +1,5 @@
 import GrayscalePipeline from "../pipelines/grayscale.js";
+import BlurPostFX from "../pipelines/blur.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -56,6 +57,7 @@ export default class RoomScene extends Phaser.Scene {
 				}
 				this.background.tint = 0xffffff;
 				this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
+					this.background.removePostPipeline(BlurPostFX);
 					if (progress >= 0.3) {
 						this.isZoomedIn = false;
 					}
@@ -66,7 +68,9 @@ export default class RoomScene extends Phaser.Scene {
 		this.input.mouse.disableContextMenu();
 
 		this.music = this.sound.add("test-music", { volume: 0.2 });
-
+		for (let i = 0; i < 10; i++) {
+			this.background.setPostPipeline(BlurPostFX);
+		}
 		this.cameras.main.setBounds(
 			0,
 			0,
