@@ -7,6 +7,7 @@ export default class RoomScene extends Phaser.Scene {
 		console.log("Preloading assets...");
 
 		this.load.image("background", "assets/tests/background.png");
+		this.load.image("fish", "assets/tests/fish.png");
 	}
 
 	create() {
@@ -14,22 +15,52 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.background = this.add.sprite(0, 0, "background");
 		this.background.setOrigin(0, 0);
+		this.background.setInteractive();
 		this.cameras.main.setBounds(0, 0, 1920, 1080);
 
-		this.expectedZoom = 1.0;
-		this.cameras.main.zoom = this.expectedZoom;
+		this.isZoomedIn = false;
 
-		this.input.on("pointerdown", () => {
-			this.expectedZoom = this.expectedZoom > 2 ? 1.0 : 3.0;
+		this.fish = this.add.sprite(200, 1000, "fish");
+		this.fish.scale = 0.5;
+		this.fish.setInteractive({
+			useHandCursor: true,
+			pixelPerfect: false,
 		});
+		this.fish.on("pointerover", () => {
+			this.fish.tint = 0x444444;
+		});
+		this.fish.on("pointerout", () => {
+			this.fish.tint = 0xffffff;
+		});
+
+		this.fish.on("pointerdown", (pointer) => {
+			if (pointer.leftButtonDown()) {
+				this.isZoomedIn = true;
+				this.cameras.main.zoomTo(3.0, 500, "Power2", false);
+			}
+		});
+
+		this.input.on("pointerdown", (pointer) => {
+			if (pointer.rightButtonDown()) {
+				this.cameras.main.zoomTo(1.0, 500, "Power2", false, (_, progress) => {
+					if (progress >= 0.99) {
+						this.isZoomedIn = false;
+					}
+				});
+			}
+		});
+
+		this.input.mouse.disableContextMenu();
 	}
 
 	update() {
-		this.cameras.main.centerOn(
-			(game.input.mousePointer.x * 1920) / 1024,
-			(game.input.mousePointer.y * 1080) / 600
-		);
-
-		this.cameras.main.zoom = (this.expectedZoom + this.cameras.main.zoom) / 2;
+		if (!this.isZoomedIn) {
+			this.cameras.main.centerOn(
+				(game.input.mousePointer.x * 1920) / 1024,
+				(game.input.mousePointer.y * 1080) / 600
+			);
+		} else {
+			this.cameras.main.centerOn(this.fish.x, this.fish.y);
+		}
 	}
 }
