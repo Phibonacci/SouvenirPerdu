@@ -2,16 +2,18 @@ const DIGIT_SIZE = 64;
 
 export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 	constructor(padlock, x, y) {
-		super(padlock.scene, x, y, DIGIT_SIZE, DIGIT_SIZE, "digits");
-		this.scale = 0.5;
+		const textureWidth = padlock.scene.game.textures.get("digits").getSourceImage().width;
+		const textureHeight = padlock.scene.game.textures.get("digits").getSourceImage().height;
+		super(padlock.scene, x, y, textureWidth, textureHeight / 10, "digits");
+		this.scale = 0.14;
 
 		this.on("pointermove", (pointer) => {
 			if (padlock.isUnlocked) {
 				return;
 			}
 			if (pointer.leftButtonDown()) {
-				this.tilePositionY += pointer.prevPosition.y - pointer.position.y;
-				this.tilePositionY = ((this.tilePositionY % (DIGIT_SIZE * 10)) + DIGIT_SIZE * 10) % (DIGIT_SIZE * 10);
+				this.tilePositionY += (pointer.prevPosition.y - pointer.position.y) * 3;
+				this.tilePositionY = ((this.tilePositionY % (this.height * 10)) + this.height * 10) % (this.height * 10);
 			}
 		});
 		this.on("pointerup", (pointer) => {
@@ -34,7 +36,7 @@ export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 	}
 
 	getDigit() {
-		return Math.round(this.tilePositionY / DIGIT_SIZE) % 10;
+		return Math.round(this.tilePositionY / this.height) % 10;
 	}
 
 	resetDigitPosition() {
@@ -42,9 +44,9 @@ export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 	}
 
 	setDigitPosition(digit) {
-		let targetY = digit * DIGIT_SIZE;
-		if (targetY === 0 && this.tilePositionY > DIGIT_SIZE) {
-			targetY = DIGIT_SIZE * 10;
+		let targetY = digit * this.height;
+		if (targetY === 0 && this.tilePositionY > this.height) {
+			targetY = this.height * 10;
 		}
 		this.scene.tweens.add({
 			targets: this,

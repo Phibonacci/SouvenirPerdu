@@ -1,7 +1,5 @@
 import PadlockDigit from "./padlock-digit.js";
 
-const DIGIT_WIDTH = 32;
-
 export default class Padlock extends Phaser.GameObjects.Container {
 	constructor(scene, x, y, password) {
 		super(scene, x, y);
@@ -10,13 +8,12 @@ export default class Padlock extends Phaser.GameObjects.Container {
 		this.isUnlocked = false;
 
 		this.sprite = new Phaser.GameObjects.Sprite(scene, 0, 0, "padlock");
-		this.sprite.scale = 0.3;
+		this.sprite.scale = 0.1;
 		this.add(this.sprite);
 
-		this.digits = [];
-		for (let i = 0; i < 3; ++i) {
-			const digit = new PadlockDigit(this, i * DIGIT_WIDTH - DIGIT_WIDTH / 2 - 15, 0 + 20);
-			this.digits.push(digit);
+		this.digits = [new PadlockDigit(this, -28, 38), new PadlockDigit(this, -1, 38), new PadlockDigit(this, 26, 38)];
+
+		for (const digit of this.digits) {
 			this.add(digit);
 			digit.on("digit-changed", () => {
 				this.onCodeChanged();
