@@ -1,18 +1,16 @@
-const DIGIT_SIZE = 64;
-
 export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 	constructor(padlock, x, y) {
 		const textureWidth = padlock.scene.game.textures.get("digits").getSourceImage().width;
 		const textureHeight = padlock.scene.game.textures.get("digits").getSourceImage().height;
 		super(padlock.scene, x, y, textureWidth, textureHeight / 10, "digits");
-		this.scale = 0.14;
+		this.scale = 0.07;
 
 		this.on("pointermove", (pointer) => {
 			if (padlock.isUnlocked) {
 				return;
 			}
 			if (pointer.leftButtonDown()) {
-				this.tilePositionY += (pointer.prevPosition.y - pointer.position.y) * 3;
+				this.tilePositionY += (pointer.prevPosition.y - pointer.position.y) * 6;
 				this.tilePositionY = ((this.tilePositionY % (this.height * 10)) + this.height * 10) % (this.height * 10);
 			}
 		});

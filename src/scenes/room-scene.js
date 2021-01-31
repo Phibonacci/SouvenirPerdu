@@ -132,8 +132,8 @@ export default class RoomScene extends Phaser.Scene {
 			this.lamp.setPostPipeline(BlurPostFX);
 		}
 
-		this.notebook = new Notebook(this, 1050, 1000).setVisible(false);
-		this.padlock = new Padlock(this, 1620, 1070, "715").setVisible(false);
+		this.notebook = new Notebook(this, 1050, 990).setVisible(false);
+		this.padlock = new Padlock(this, 1620, 1050, "715").setVisible(false);
 
 		this.entities = [this.glasses, this.lamp, this.notebook, this.padlock];
 	}

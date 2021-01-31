@@ -8,10 +8,14 @@ export default class Padlock extends Phaser.GameObjects.Container {
 		this.isUnlocked = false;
 
 		this.sprite = new Phaser.GameObjects.Sprite(scene, 0, 0, "padlock");
-		this.sprite.scale = 0.1;
+		this.sprite.scale = 0.05;
 		this.add(this.sprite);
 
-		this.digits = [new PadlockDigit(this, -27, 38), new PadlockDigit(this, -0.5, 38), new PadlockDigit(this, 26, 38)];
+		this.digits = [
+			new PadlockDigit(this, -13.25, 19),
+			new PadlockDigit(this, -0.5, 19),
+			new PadlockDigit(this, 13, 19),
+		];
 
 		for (const digit of this.digits) {
 			this.add(digit);
