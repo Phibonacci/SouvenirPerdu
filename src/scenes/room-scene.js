@@ -24,6 +24,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("notebook-page1", "assets/notebook-page1.png");
 		this.load.image("notebook-page2", "assets/notebook-page2.png");
 
+		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
+
 		MusicPlayer.preload(this);
 	}
 

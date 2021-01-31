@@ -45,7 +45,7 @@ export default class MusicPlayer {
 
 		this.scene.tweens.add({
 			targets: this.loops[part - 1],
-			volume: 0.2,
+			volume: 0.1,
 			duration: 2000,
 		});
 
