@@ -38,11 +38,7 @@ export default class Padlock extends Phaser.GameObjects.Container {
 
 		this.sprite.on("pointerdown", (pointer) => {
 			if (pointer.leftButtonDown()) {
-				if (!this.scene.isZoomedIn) {
-					this.select();
-				} else if (this.isUnlocked) {
-					this.emit("unlocked");
-				}
+				this.select();
 			}
 		});
 

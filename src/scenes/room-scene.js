@@ -47,6 +47,7 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.background.scale = 0.7;
 
+		this.isLockedDueToAnimation = false;
 		this.isZoomedIn = false;
 		this.selectedEntity = null;
 
@@ -56,6 +57,9 @@ export default class RoomScene extends Phaser.Scene {
 			this.add.existing(entity);
 
 			entity.on("selected", () => {
+				if (this.isLockedDueToAnimation) {
+					return;
+				}
 				if (this.isZoomedIn) {
 					this.useEntity(entity);
 				} else {
@@ -65,6 +69,9 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		this.input.on("pointerdown", (pointer) => {
+			if (this.isLockedDueToAnimation) {
+				return;
+			}
 			if (pointer.rightButtonDown() && this.isZoomedIn) {
 				this.unselectEntity();
 			}
@@ -104,12 +111,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.glasses = new InteractiveEntity(this, 150, 1520, "glasses");
 		this.glasses.scale = 0.1;
 
-		this.padlock = new Padlock(this, 1700, 1000, "517");
+		this.padlock = new Padlock(this, 1700, 1000, "517").setVisible(false);
 		this.add.existing(this.padlock);
-
-		this.padlock.on("unlocked", () => {
-			this.useEntity(this.padlock);
-		});
 
 		this.entities = [this.glasses, this.padlock];
 	}
@@ -121,28 +124,73 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	useEntity(entity) {
+		// Step 1: glasses -> padlock
 		if (entity === this.glasses) {
-			this.background.removePostPipeline(BlurPostFX);
-			this.glasses.destroy();
+			this.isLockedDueToAnimation = true;
 			this.tweens.add({
-				targets: this.spotlight_settings,
-				ray: 0.8,
-				duration: 8500,
+				targets: this.glasses,
+				alpha: 0,
+				duration: 500,
+				onComplete: () => {
+					this.isLockedDueToAnimation = false;
+
+					// Destroy the glasses
+					this.glasses.destroy();
+					this.selectedEntity = null;
+					this.unselectEntity();
+
+					// Remove blur
+					this.background.removePostPipeline(BlurPostFX);
+
+					// Start the first music track
+					this.musicPlayer.play(1);
+
+					// Let there be light
+					this.tweens.add({
+						targets: this.spotlight_settings,
+						ray: 0.8,
+						duration: 8500,
+						onComplete: () => {
+							// Show the padlock
+							this.padlock.setAlpha(0).setVisible(true);
+							this.tweens.add({
+								targets: this.padlock,
+								alpha: 1,
+								duration: 5000,
+							});
+						},
+					});
+				},
 			});
-			this.selectedEntity = null;
-			this.musicPlayer.play(1);
 		}
+
+		// Step 2: padlock
 		if (entity === this.padlock) {
-			this.padlock.destroy();
+			this.isLockedDueToAnimation = true;
 			this.tweens.add({
-				targets: this.spotlight_settings,
-				ray: 2,
-				duration: 30000,
+				targets: this.padlock,
+				alpha: 0,
+				duration: 500,
+				onComplete: () => {
+					this.isLockedDueToAnimation = false;
+
+					// Destroy the padlock
+					this.padlock.destroy();
+					this.selectedEntity = null;
+					this.unselectEntity();
+
+					// Let there be light
+					this.tweens.add({
+						targets: this.spotlight_settings,
+						ray: 2,
+						duration: 30000,
+					});
+
+					// Start the last music track
+					this.musicPlayer.play(4);
+				},
 			});
-			this.selectedEntity = null;
-			this.musicPlayer.play(4);
 		}
-		this.unselectEntity();
 	}
 
 	unselectEntity() {
