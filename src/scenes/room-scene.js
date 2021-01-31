@@ -134,7 +134,7 @@ export default class RoomScene extends Phaser.Scene {
 		entity.onSelected();
 		this.selectedEntity = entity;
 
-		this.cameras.main.zoomTo(3.0, 2500, "Power1", true);
+		this.cameras.main.zoomTo(entity.zoomFactor || 3.0, 2500, "Power1", true);
 	}
 
 	useEntity(entity) {

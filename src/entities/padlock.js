@@ -4,6 +4,8 @@ export default class Padlock extends Phaser.GameObjects.Container {
 	constructor(scene, x, y, password) {
 		super(scene, x, y);
 
+		this.zoomFactor = 4.0;
+
 		this.password = password;
 		this.isUnlocked = false;
 
