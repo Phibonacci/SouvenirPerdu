@@ -18,7 +18,7 @@ export default class Narrator {
 		}
 		this.played[voice] = true;
 
-		const sound = this.scene.sound.add(voice, { volume: 2.0 });
+		const sound = this.scene.sound.add(voice, { volume: 2.5 });
 		sound.play();
 	}
 }
