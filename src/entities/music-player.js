@@ -12,7 +12,7 @@ export default class MusicPlayer {
 
 	constructor(scene) {
 		this.scene = scene;
-		this.isPlaying = false;
+		this.playing = 0;
 
 		const names = [
 			["all-piano"],
@@ -25,31 +25,14 @@ export default class MusicPlayer {
 	}
 
 	play(part) {
-		if (!this.isPlaying) {
-			this.isPlaying = true;
-			this.onStopComplete(part);
-			return;
+		let seekTo = 0;
+		if (this.playing > 0) {
+			seekTo = this.loops[this.playing][0].playTime;
 		}
 
-		this.scene.tweens.add({
-			targets: this.loops.flat(),
-			volume: 0,
-			duration: 2000,
-			onComplete: () => this.onStopComplete(part),
-		});
-	}
-
-	onStopComplete(part) {
+		this.playing = part;
 		this.loops.forEach((part) => part.forEach((music) => music.stop()));
-		this.loops[part - 1].forEach((music) => music.setVolume(0));
-
-		this.scene.tweens.add({
-			targets: this.loops[part - 1],
-			volume: 0.1,
-			duration: 2000,
-		});
-
-		this.loops[part - 1].forEach((music) => music.play({ loop: true }));
+		this.loops[part - 1].forEach((music) => music.play({ loop: true, volume: 0.1, seek: seekTo }));
 	}
 
 	stop() {
