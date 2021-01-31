@@ -11,7 +11,7 @@ export default class Padlock extends Phaser.GameObjects.Container {
 		this.sprite.scale = 0.1;
 		this.add(this.sprite);
 
-		this.digits = [new PadlockDigit(this, -27, 38), new PadlockDigit(this, -1, 38), new PadlockDigit(this, 26, 38)];
+		this.digits = [new PadlockDigit(this, -27, 38), new PadlockDigit(this, -0.5, 38), new PadlockDigit(this, 26, 38)];
 
 		for (const digit of this.digits) {
 			this.add(digit);
