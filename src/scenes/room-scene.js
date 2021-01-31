@@ -30,6 +30,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
+		this.load.audio("lamp", "assets/sfx/lamp.ogg");
+		this.load.audio("glasses", "assets/sfx/glasses.ogg");
 
 		MusicPlayer.preload(this);
 	}
@@ -46,6 +48,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.musicPlayer = new MusicPlayer(this);
 		this.padlockOpen = this.sound.add("padlock-open");
+		this.lampSwitch = this.sound.add("lamp");
+		this.glassesTake = this.sound.add("glasses");
 
 		this.background = this.add.sprite(0, 0, "background");
 		this.background.setInteractive();
@@ -147,6 +151,8 @@ export default class RoomScene extends Phaser.Scene {
 	useEntity(entity) {
 		// Step 1: glasses -> lamp
 		if (entity === this.glasses) {
+			this.glassesTake.play();
+
 			this.isLockedDueToAnimation = true;
 			this.tweens.add({
 				targets: this.glasses,
@@ -175,6 +181,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		// Step 2: lamp -> padlock
 		if (entity === this.lamp) {
+			this.lampSwitch.play();
+
 			// Zoom out
 			this.unselectEntity();
 
