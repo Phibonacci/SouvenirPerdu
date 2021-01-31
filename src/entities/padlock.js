@@ -28,6 +28,7 @@ export default class Padlock extends Phaser.GameObjects.Container {
 				digit.tint = 0x808080;
 			}
 		});
+
 		this.sprite.on("pointerout", () => {
 			this.sprite.tint = 0xffffff;
 			for (const digit of this.digits) {
