@@ -105,6 +105,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.background.width * this.background.scale,
 			this.background.height * this.background.scale
 		);
+		this.camera_speed = 1500;
 	}
 
 	update() {
@@ -112,7 +113,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.cameras.main.pan(
 				(game.input.mousePointer.x * this.background.width * this.background.scale) / this.game.config.width,
 				(game.input.mousePointer.y * this.background.height * this.background.scale) / this.game.config.height,
-				1000,
+				this.camera_speed,
 				"Power1",
 				true
 			);
@@ -144,8 +145,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.selectedEntity = entity;
 
 		this.isLockedDueToAnimation = true;
-		this.cameras.main.zoomTo(3.0, 1000, "Power1", true, (_, progress) => {
-			if (progress >= 0.3) {
+		this.cameras.main.zoomTo(3.0, 2500, "Power1", true, (_, progress) => {
+			if (progress >= 0.8) {
 				this.isLockedDueToAnimation = false;
 			}
 		});
@@ -241,11 +242,16 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		this.isLockedDueToAnimation = true;
-		this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
-			if (progress >= 0.3) {
+		this.cameras.main.zoomTo(1.0, 1200, "Power1", true, (_, progress) => {
+			if (progress >= 0.7 && progress < 0.9) {
+				this.camera_speed = 1500;
+				this.selectedEntity = null;
+			} else if (progress >= 0.9) {
 				this.isLockedDueToAnimation = false;
 				this.isZoomedIn = false;
 				this.selectedEntity = null;
+			} else {
+				this.camera_speed = 5000;
 			}
 		});
 	}
