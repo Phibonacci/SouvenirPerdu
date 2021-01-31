@@ -24,6 +24,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("notebook-page1", "assets/notebook-page1.png");
 		this.load.image("notebook-page2", "assets/notebook-page2.png");
 
+		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
 
 		MusicPlayer.preload(this);
@@ -40,6 +41,7 @@ export default class RoomScene extends Phaser.Scene {
 		console.log("Creating the game...");
 
 		this.musicPlayer = new MusicPlayer(this);
+		this.padlockOpen = this.sound.add("padlock-open");
 
 		this.background = this.add.sprite(0, 0, "background");
 		this.background.setInteractive();
@@ -194,6 +196,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		// Step 3: padlock
 		if (entity === this.padlock) {
+			this.padlockOpen.play();
+
 			this.isLockedDueToAnimation = true;
 			this.tweens.add({
 				targets: this.padlock,
