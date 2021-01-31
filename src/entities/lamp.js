@@ -4,12 +4,12 @@ export default class Lamp extends Phaser.GameObjects.Container {
 
 		this.isLit = false;
 
-		this.switch = new Phaser.GameObjects.Sprite(scene, 50, 5, "lamp-switch");
-		this.switch.scale = 0.3;
+		this.switch = new Phaser.GameObjects.Sprite(scene, 50, 10, "lamp-switch");
+		this.switch.scale = 0.25;
 		this.add(this.switch);
 
 		this.sprite = new Phaser.GameObjects.Sprite(scene, 0, 0, "lamp");
-		this.sprite.scale = 0.5;
+		this.sprite.scale = 0.2;
 		this.add(this.sprite);
 
 		this.sprite.on("pointerdown", (pointer) => {
