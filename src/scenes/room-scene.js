@@ -129,12 +129,20 @@ export default class RoomScene extends Phaser.Scene {
 			});
 			this.music.play({ loop: true });
 			this.glasses.destroy();
-			this.spotlight_settings.ray = 0.8;
+			this.tweens.add({
+				targets: this.spotlight_settings,
+				ray: 0.8,
+				duration: 4000,
+			});
 			this.selectedEntity = null;
 		}
 		if (entity === this.padlock) {
 			this.padlock.destroy();
-			this.spotlight_settings.ray = 10;
+			this.tweens.add({
+				targets: this.spotlight_settings,
+				ray: 2,
+				duration: 20000,
+			});
 			this.selectedEntity = null;
 		}
 		this.unselectEntity();
