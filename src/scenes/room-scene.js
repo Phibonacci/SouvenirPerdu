@@ -2,6 +2,7 @@ import BlurPostFX from "../pipelines/blur.js";
 import SpotlightPostFX from "../pipelines/spotlight.js";
 import InteractiveEntity from "../entities/interactive-entity.js";
 import Padlock from "../entities/padlock.js";
+import MusicPlayer from "../entities/music-player.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -17,7 +18,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("padlock", "assets/padlock.png");
 		this.load.image("padlock-unlocked", "assets/padlock-unlocked.png");
 
-		this.load.audio("test-music", "assets/music.ogg");
+		MusicPlayer.preload(this);
 	}
 
 	update_light() {
@@ -29,6 +30,8 @@ export default class RoomScene extends Phaser.Scene {
 
 	create() {
 		console.log("Creating the game...");
+
+		this.musicPlayer = new MusicPlayer(this);
 
 		this.background = this.add.image(0, 0, "background");
 		this.background.setOrigin(0, 0);
@@ -69,7 +72,6 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.input.mouse.disableContextMenu();
 
-		this.music = this.sound.add("test-music");
 		for (let i = 0; i < 10; i++) {
 			this.background.setPostPipeline(BlurPostFX);
 		}
@@ -121,13 +123,6 @@ export default class RoomScene extends Phaser.Scene {
 	useEntity(entity) {
 		if (entity === this.glasses) {
 			this.background.removePostPipeline(BlurPostFX);
-			this.music.volume = 0;
-			this.tweens.add({
-				targets: this.music,
-				volume: 0.2,
-				duration: 2000,
-			});
-			this.music.play({ loop: true });
 			this.glasses.destroy();
 			this.tweens.add({
 				targets: this.spotlight_settings,
@@ -135,6 +130,7 @@ export default class RoomScene extends Phaser.Scene {
 				duration: 8500,
 			});
 			this.selectedEntity = null;
+			this.musicPlayer.play(1);
 		}
 		if (entity === this.padlock) {
 			this.padlock.destroy();
@@ -144,6 +140,7 @@ export default class RoomScene extends Phaser.Scene {
 				duration: 30000,
 			});
 			this.selectedEntity = null;
+			this.musicPlayer.play(4);
 		}
 		this.unselectEntity();
 	}
