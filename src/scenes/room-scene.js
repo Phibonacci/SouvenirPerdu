@@ -1,6 +1,7 @@
 import BlurPostFX from "../pipelines/blur.js";
 import SpotlightPostFX from "../pipelines/spotlight.js";
-import InteractiveEntity from "../entities/interactive-entity.js";
+import Glasses from "../entities/glasses.js";
+import Notebook from "../entities/notebook.js";
 import Padlock from "../entities/padlock.js";
 import Lamp from "../entities/lamp.js";
 import MusicPlayer from "../entities/music-player.js";
@@ -20,6 +21,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("padlock-unlocked", "assets/padlock-unlocked.png");
 		this.load.image("lamp", "assets/lamp.png");
 		this.load.image("lamp-switch", "assets/lamp-switch.png");
+		this.load.image("notebook-page1", "assets/notebook-page1.png");
+		this.load.image("notebook-page2", "assets/notebook-page2.png");
 
 		MusicPlayer.preload(this);
 	}
@@ -36,7 +39,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.musicPlayer = new MusicPlayer(this);
 
-		this.background = this.add.image(0, 0, "background");
+		this.background = this.add.sprite(0, 0, "background");
+		this.background.setInteractive();
 		this.background.setOrigin(0, 0);
 
 		this.spotlight = new SpotlightPostFX(this.game);
@@ -80,6 +84,16 @@ export default class RoomScene extends Phaser.Scene {
 			}
 		});
 
+		this.background.on("pointerdown", (pointer) => {
+			if (this.isLockedDueToAnimation) {
+				return;
+			}
+
+			if (pointer.leftButtonDown() && this.isZoomedIn) {
+				this.unselectEntity();
+			}
+		});
+
 		this.input.mouse.disableContextMenu();
 
 		for (let i = 0; i < 10; i++) {
@@ -111,17 +125,17 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	createEntities() {
-		this.glasses = new InteractiveEntity(this, 100, 1600, "glasses");
-		this.glasses.scale = 0.1;
+		this.glasses = new Glasses(this, 100, 1600);
 
 		this.lamp = new Lamp(this, 300, 1500);
 		for (let i = 0; i < 10; i++) {
 			this.lamp.setPostPipeline(BlurPostFX);
 		}
 
-		this.padlock = new Padlock(this, 1700, 1000, "517").setVisible(false);
+		this.notebook = new Notebook(this, 1000, 1000).setVisible(false);
+		this.padlock = new Padlock(this, 1700, 1000, "715").setVisible(false);
 
-		this.entities = [this.lamp, this.glasses, this.padlock];
+		this.entities = [this.glasses, this.lamp, this.notebook, this.padlock];
 	}
 
 	selectEntity(entity) {
@@ -180,12 +194,13 @@ export default class RoomScene extends Phaser.Scene {
 				ray: 0.8,
 				duration: 8500,
 				onComplete: () => {
-					// Show the padlock
+					// Show the notebook and the padlock
+					this.notebook.setAlpha(0).setVisible(true);
 					this.padlock.setAlpha(0).setVisible(true);
 					this.tweens.add({
-						targets: this.padlock,
+						targets: [this.notebook, this.padlock],
 						alpha: 1,
-						duration: 5000,
+						duration: 3000,
 					});
 				},
 			});

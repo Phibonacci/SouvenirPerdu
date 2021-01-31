@@ -1,6 +1,9 @@
-export default class InteractiveEntity extends Phaser.GameObjects.Sprite {
-	constructor(scene, x, y, texture) {
-		super(scene, x, y, texture);
+export default class Glasses extends Phaser.GameObjects.Sprite {
+	constructor(scene, x, y) {
+		super(scene, x, y, "glasses");
+
+		this.scale = 0.1;
+		this.setInteractive({ useHandCursor: true });
 
 		this.on("pointerover", () => {
 			this.tint = 0x808080;
@@ -15,8 +18,6 @@ export default class InteractiveEntity extends Phaser.GameObjects.Sprite {
 				this.emit("selected");
 			}
 		});
-
-		this.setInteractive({ useHandCursor: true });
 	}
 
 	onSelected() {}
