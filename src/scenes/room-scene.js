@@ -4,6 +4,7 @@ import Glasses from "../entities/glasses.js";
 import Notebook from "../entities/notebook.js";
 import Padlock from "../entities/padlock.js";
 import Lamp from "../entities/lamp.js";
+import Picture from "../entities/picture.js";
 import MusicPlayer from "../entities/music-player.js";
 
 export default class RoomScene extends Phaser.Scene {
@@ -24,6 +25,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("lamp-light", "assets/lamp-light.png");
 		this.load.image("notebook-page1", "assets/notebook-page1.png");
 		this.load.image("notebook-page2", "assets/notebook-page2.png");
+		this.load.image("picture", "assets/picture.png");
+		this.load.image("picture-blur", "assets/picture-blur.png");
 
 		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
@@ -127,10 +130,11 @@ export default class RoomScene extends Phaser.Scene {
 			this.lamp.setPostPipeline(BlurPostFX);
 		}
 
+		this.picture = new Picture(this, 1730, 400).setVisible(false);
 		this.notebook = new Notebook(this, 1050, 990).setVisible(false);
 		this.padlock = new Padlock(this, 1620, 1050, "715").setVisible(false);
 
-		this.entities = [this.glasses, this.lamp, this.notebook, this.padlock];
+		this.entities = [this.glasses, this.picture, this.lamp, this.notebook, this.padlock];
 	}
 
 	selectEntity(entity) {
@@ -186,8 +190,9 @@ export default class RoomScene extends Phaser.Scene {
 					// Show the notebook and the padlock
 					this.notebook.setAlpha(0).setVisible(true);
 					this.padlock.setAlpha(0).setVisible(true);
+					this.picture.setAlpha(0).setVisible(true);
 					this.tweens.add({
-						targets: [this.notebook, this.padlock],
+						targets: [this.notebook, this.padlock, this.picture],
 						alpha: 1,
 						duration: 3000,
 					});
