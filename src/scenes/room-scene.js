@@ -7,7 +7,7 @@ import Lamp from "../entities/lamp.js";
 import Picture from "../entities/picture.js";
 import MusicPlayer from "../entities/music-player.js";
 import Narrator from "../entities/narrator.js";
-
+import Switch from "../entities/switch.js";
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
 		super("Room");
@@ -28,6 +28,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("notebook-page2", "assets/notebook-page2.png");
 		this.load.image("picture", "assets/picture.png");
 		this.load.image("picture-blur", "assets/picture-blur.png");
+		this.load.image("switch-on", "assets/switch-on.png");
+		this.load.image("switch-off", "assets/switch-off.png");
 
 		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
@@ -62,8 +64,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.spotlight = new SpotlightPostFX(this.game);
 		this.game.renderer.pipelines.add("Spotlight", this.spotlight);
 		this.spotlight_settings = {
-			position: { x: 0, y: this.background.height },
-			ray: 0.3,
+			position: { x: 0, y: this.background.height - 200 },
+			ray: 0.25,
 		};
 		this.update_light();
 		this.background.setPipeline(this.spotlight);
@@ -131,7 +133,8 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	createEntities() {
-		this.glasses = new Glasses(this, 100, 1600);
+		this.glasses = new Glasses(this, 100, 1650);
+		this.glasses.setPostPipeline(BlurPostFX);
 
 		this.lamp = new Lamp(this, 290, 1420);
 		for (let i = 0; i < 10; i++) {
@@ -141,8 +144,9 @@ export default class RoomScene extends Phaser.Scene {
 		this.picture = new Picture(this, 1730, 400).setVisible(false);
 		this.notebook = new Notebook(this, 1050, 990).setVisible(false);
 		this.padlock = new Padlock(this, 1620, 1050, "715").setVisible(false);
+		this.switch = new Switch(this, 820, 560).setVisible(false);
 
-		this.entities = [this.glasses, this.picture, this.lamp, this.notebook, this.padlock];
+		this.entities = [this.glasses, this.picture, this.lamp, this.notebook, this.padlock, this.switch];
 	}
 
 	selectEntity(entity) {
@@ -205,22 +209,34 @@ export default class RoomScene extends Phaser.Scene {
 			// Play the second music track
 			this.musicPlayer.play(2);
 
+			this.notebook.setAlpha(0).setVisible(true);
+			this.padlock.setAlpha(0).setVisible(true);
+			this.picture.setAlpha(0).setVisible(true);
+			this.switch.setAlpha(0).setVisible(true);
+			this.tweens.add({
+				targets: this.notebook,
+				alpha: 1,
+				duration: 3000,
+				delay: 2500,
+			});
+			this.tweens.add({
+				targets: this.padlock,
+				alpha: 1,
+				duration: 3000,
+				delay: 5500,
+			});
+			this.tweens.add({
+				targets: this.switch,
+				alpha: 1,
+				duration: 3000,
+				delay: 5500,
+			});
+
 			// Let there be light
 			this.tweens.add({
 				targets: this.spotlight_settings,
-				ray: 0.8,
+				ray: 0.75,
 				duration: 8500,
-				onComplete: () => {
-					// Show the notebook and the padlock
-					this.notebook.setAlpha(0).setVisible(true);
-					this.padlock.setAlpha(0).setVisible(true);
-					this.picture.setAlpha(0).setVisible(true);
-					this.tweens.add({
-						targets: [this.notebook, this.padlock, this.picture],
-						alpha: 1,
-						duration: 3000,
-					});
-				},
 			});
 		}
 
@@ -252,6 +268,22 @@ export default class RoomScene extends Phaser.Scene {
 					this.musicPlayer.play(4);
 				},
 			});
+		}
+
+		if (entity === this.switch) {
+			this.switch.turnOn();
+			this.tweens.add({
+				targets: this.spotlight_settings,
+				ray: 1.4,
+				duration: 20000,
+			});
+			this.tweens.add({
+				targets: this.picture,
+				alpha: 1,
+				duration: 1500,
+				delay: 1000,
+			});
+			this.unselectEntity();
 		}
 	}
 
