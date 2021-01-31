@@ -2,7 +2,7 @@ export default class Notebook extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
 		super(scene, x, y, "notebook-page1");
 
-		this.scale = 0.25;
+		this.scale = 0.1;
 		this.setInteractive({ useHandCursor: true });
 
 		this.on("pointerover", () => {
