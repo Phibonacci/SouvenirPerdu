@@ -10,7 +10,7 @@ export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 				return;
 			}
 			if (pointer.leftButtonDown()) {
-				this.tilePositionY += pointer.position.y - pointer.prevPosition.y;
+				this.tilePositionY += pointer.prevPosition.y - pointer.position.y;
 				this.tilePositionY = ((this.tilePositionY % (DIGIT_SIZE * 10)) + DIGIT_SIZE * 10) % (DIGIT_SIZE * 10);
 			}
 		});
