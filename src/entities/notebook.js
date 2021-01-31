@@ -16,6 +16,7 @@ export default class Notebook extends Phaser.GameObjects.Sprite {
 		this.on("pointerup", (pointer) => {
 			if (pointer.button === 0) {
 				if (this.isSelected) {
+					this.scene.narrator.play("715");
 					this.setTexture(this.texture.key === "notebook-page1" ? "notebook-page2" : "notebook-page1");
 				} else {
 					this.emit("selected");

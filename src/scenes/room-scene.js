@@ -6,6 +6,7 @@ import Padlock from "../entities/padlock.js";
 import Lamp from "../entities/lamp.js";
 import Picture from "../entities/picture.js";
 import MusicPlayer from "../entities/music-player.js";
+import Narrator from "../entities/narrator.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -34,6 +35,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.audio("glasses", "assets/sfx/glasses.ogg");
 
 		MusicPlayer.preload(this);
+		Narrator.preload(this);
 	}
 
 	update_light() {
@@ -50,6 +52,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.padlockOpen = this.sound.add("padlock-open");
 		this.lampSwitch = this.sound.add("lamp");
 		this.glassesTake = this.sound.add("glasses");
+
+		this.narrator = new Narrator(this);
 
 		this.background = this.add.sprite(0, 0, "background");
 		this.background.setInteractive();
@@ -144,6 +148,18 @@ export default class RoomScene extends Phaser.Scene {
 	selectEntity(entity) {
 		entity.onSelected();
 		this.selectedEntity = entity;
+
+		if (entity === this.glasses) {
+			this.narrator.play("mmmhh");
+		}
+
+		if (entity === this.lamp) {
+			this.narrator.play("this-place");
+		}
+
+		if (entity === this.picture) {
+			this.narrator.play("picture-familiar");
+		}
 
 		this.cameras.main.zoomTo(entity.zoomFactor || 3.0, 2500, "Power1", true);
 	}
