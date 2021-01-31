@@ -2,6 +2,7 @@ import BlurPostFX from "../pipelines/blur.js";
 import SpotlightPostFX from "../pipelines/spotlight.js";
 import InteractiveEntity from "../entities/interactive-entity.js";
 import Padlock from "../entities/padlock.js";
+import Lamp from "../entities/lamp.js";
 import MusicPlayer from "../entities/music-player.js";
 
 export default class RoomScene extends Phaser.Scene {
@@ -17,6 +18,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("digits", "assets/digits.png");
 		this.load.image("padlock", "assets/padlock.png");
 		this.load.image("padlock-unlocked", "assets/padlock-unlocked.png");
+		this.load.image("lamp", "assets/lamp.png");
+		this.load.image("lamp-switch", "assets/lamp-switch.png");
 
 		MusicPlayer.preload(this);
 	}
@@ -60,7 +63,7 @@ export default class RoomScene extends Phaser.Scene {
 				if (this.isLockedDueToAnimation) {
 					return;
 				}
-				if (this.isZoomedIn) {
+				if (this.isZoomedIn && this.selectedEntity === entity) {
 					this.useEntity(entity);
 				} else {
 					this.selectEntity(entity);
@@ -108,23 +111,34 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	createEntities() {
-		this.glasses = new InteractiveEntity(this, 150, 1520, "glasses");
+		this.glasses = new InteractiveEntity(this, 100, 1600, "glasses");
 		this.glasses.scale = 0.1;
 
-		this.padlock = new Padlock(this, 1700, 1000, "517").setVisible(false);
-		this.add.existing(this.padlock);
+		this.lamp = new Lamp(this, 300, 1500);
+		for (let i = 0; i < 10; i++) {
+			this.lamp.setPostPipeline(BlurPostFX);
+		}
 
-		this.entities = [this.glasses, this.padlock];
+		this.padlock = new Padlock(this, 1700, 1000, "517").setVisible(false);
+
+		this.entities = [this.lamp, this.glasses, this.padlock];
 	}
 
 	selectEntity(entity) {
+		entity.onSelected();
 		this.isZoomedIn = true;
 		this.selectedEntity = entity;
-		this.cameras.main.zoomTo(3.0, 1000, "Power1", true);
+
+		this.isLockedDueToAnimation = true;
+		this.cameras.main.zoomTo(3.0, 1000, "Power1", true, (_, progress) => {
+			if (progress >= 0.3) {
+				this.isLockedDueToAnimation = false;
+			}
+		});
 	}
 
 	useEntity(entity) {
-		// Step 1: glasses -> padlock
+		// Step 1: glasses -> lamp
 		if (entity === this.glasses) {
 			this.isLockedDueToAnimation = true;
 			this.tweens.add({
@@ -142,29 +156,42 @@ export default class RoomScene extends Phaser.Scene {
 					// Remove blur
 					this.background.removePostPipeline(BlurPostFX);
 
-					// Start the first music track
+					// Play the first music track
 					this.musicPlayer.play(1);
 
-					// Let there be light
+					// Show the lamp
+					this.lamp.enableInteractivity();
+					this.lamp.removePostPipeline(BlurPostFX);
+				},
+			});
+		}
+
+		// Step 2: lamp -> padlock
+		if (entity === this.lamp) {
+			// Zoom out
+			this.unselectEntity();
+
+			// Play the second music track
+			this.musicPlayer.play(2);
+
+			// Let there be light
+			this.tweens.add({
+				targets: this.spotlight_settings,
+				ray: 0.8,
+				duration: 8500,
+				onComplete: () => {
+					// Show the padlock
+					this.padlock.setAlpha(0).setVisible(true);
 					this.tweens.add({
-						targets: this.spotlight_settings,
-						ray: 0.8,
-						duration: 8500,
-						onComplete: () => {
-							// Show the padlock
-							this.padlock.setAlpha(0).setVisible(true);
-							this.tweens.add({
-								targets: this.padlock,
-								alpha: 1,
-								duration: 5000,
-							});
-						},
+						targets: this.padlock,
+						alpha: 1,
+						duration: 5000,
 					});
 				},
 			});
 		}
 
-		// Step 2: padlock
+		// Step 3: padlock
 		if (entity === this.padlock) {
 			this.isLockedDueToAnimation = true;
 			this.tweens.add({
@@ -186,7 +213,7 @@ export default class RoomScene extends Phaser.Scene {
 						duration: 30000,
 					});
 
-					// Start the last music track
+					// Play the last music track
 					this.musicPlayer.play(4);
 				},
 			});
@@ -195,10 +222,13 @@ export default class RoomScene extends Phaser.Scene {
 
 	unselectEntity() {
 		if (this.selectedEntity) {
-			this.selectedEntity.unselect();
+			this.selectedEntity.onUnselected();
 		}
+
+		this.isLockedDueToAnimation = true;
 		this.cameras.main.zoomTo(1.0, 1000, "Power1", true, (_, progress) => {
 			if (progress >= 0.3) {
+				this.isLockedDueToAnimation = false;
 				this.isZoomedIn = false;
 				this.selectedEntity = null;
 			}

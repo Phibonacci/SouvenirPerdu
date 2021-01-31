@@ -38,28 +38,30 @@ export default class Padlock extends Phaser.GameObjects.Container {
 
 		this.sprite.on("pointerdown", (pointer) => {
 			if (pointer.leftButtonDown()) {
-				this.select();
+				this.emit("selected");
 			}
 		});
 
-		this.unselect();
+		this.sprite.input.enabled = true;
+		for (const digit of this.digits) {
+			digit.input.enabled = false;
+		}
 	}
 
 	getCode() {
 		return this.digits.map((x) => x.getDigit()).join("");
 	}
 
-	select() {
+	onSelected() {
 		if (!this.isUnlocked) {
 			this.sprite.input.enabled = false;
 			for (const digit of this.digits) {
 				digit.input.enabled = true;
 			}
 		}
-		this.emit("selected");
 	}
 
-	unselect() {
+	onUnselected() {
 		this.sprite.input.enabled = true;
 		for (const digit of this.digits) {
 			digit.input.enabled = false;

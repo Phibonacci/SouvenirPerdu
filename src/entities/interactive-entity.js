@@ -19,7 +19,7 @@ export default class InteractiveEntity extends Phaser.GameObjects.Sprite {
 		this.setInteractive({ useHandCursor: true });
 	}
 
-	unselect() {
-		this.tint = 0xffffff;
-	}
+	onSelected() {}
+
+	onUnselected() {}
 }

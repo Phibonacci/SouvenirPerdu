@@ -29,7 +29,7 @@ void main()
 
 	sum /= 9.0;
 	//discard alpha for our simple demo,return
-	gl_FragColor =  vec4(sum.rgb, 1.0);
+	gl_FragColor =  vec4(sum.rgb, sum.a);
 }
 `;
 
