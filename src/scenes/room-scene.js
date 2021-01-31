@@ -55,7 +55,6 @@ export default class RoomScene extends Phaser.Scene {
 		this.background.scale = 0.7;
 
 		this.isLockedDueToAnimation = false;
-		this.isZoomedIn = false;
 		this.selectedEntity = null;
 
 		this.createEntities();
@@ -67,7 +66,7 @@ export default class RoomScene extends Phaser.Scene {
 				if (this.isLockedDueToAnimation) {
 					return;
 				}
-				if (this.isZoomedIn && this.selectedEntity === entity) {
+				if (this.selectedEntity === entity) {
 					this.useEntity(entity);
 				} else {
 					this.selectEntity(entity);
@@ -79,17 +78,7 @@ export default class RoomScene extends Phaser.Scene {
 			if (this.isLockedDueToAnimation) {
 				return;
 			}
-			if (pointer.rightButtonDown() && this.isZoomedIn) {
-				this.unselectEntity();
-			}
-		});
-
-		this.background.on("pointerdown", (pointer) => {
-			if (this.isLockedDueToAnimation) {
-				return;
-			}
-
-			if (pointer.leftButtonDown() && this.isZoomedIn) {
+			if (pointer.rightButtonDown() && this.selectedEntity) {
 				this.unselectEntity();
 			}
 		});
@@ -118,7 +107,7 @@ export default class RoomScene extends Phaser.Scene {
 				true
 			);
 		} else {
-			this.cameras.main.centerOn(this.selectedEntity.x, this.selectedEntity.y);
+			this.cameras.main.pan(this.selectedEntity.x, this.selectedEntity.y, 500, "Power1", true);
 		}
 		if (this.spotlight_settings) {
 			this.update_light();
@@ -141,15 +130,9 @@ export default class RoomScene extends Phaser.Scene {
 
 	selectEntity(entity) {
 		entity.onSelected();
-		this.isZoomedIn = true;
 		this.selectedEntity = entity;
 
-		this.isLockedDueToAnimation = true;
-		this.cameras.main.zoomTo(3.0, 2500, "Power1", true, (_, progress) => {
-			if (progress >= 0.8) {
-				this.isLockedDueToAnimation = false;
-			}
-		});
+		this.cameras.main.zoomTo(3.0, 2500, "Power1", true);
 	}
 
 	useEntity(entity) {
@@ -248,7 +231,6 @@ export default class RoomScene extends Phaser.Scene {
 				this.selectedEntity = null;
 			} else if (progress >= 0.9) {
 				this.isLockedDueToAnimation = false;
-				this.isZoomedIn = false;
 				this.selectedEntity = null;
 			} else {
 				this.camera_speed = 5000;
