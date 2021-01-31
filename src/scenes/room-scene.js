@@ -21,6 +21,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("padlock-unlocked", "assets/padlock-unlocked.png");
 		this.load.image("lamp", "assets/lamp.png");
 		this.load.image("lamp-switch", "assets/lamp-switch.png");
+		this.load.image("lamp-light", "assets/lamp-light.png");
 		this.load.image("notebook-page1", "assets/notebook-page1.png");
 		this.load.image("notebook-page2", "assets/notebook-page2.png");
 
@@ -121,7 +122,7 @@ export default class RoomScene extends Phaser.Scene {
 	createEntities() {
 		this.glasses = new Glasses(this, 100, 1600);
 
-		this.lamp = new Lamp(this, 300, 1500);
+		this.lamp = new Lamp(this, 290, 1420);
 		for (let i = 0; i < 10; i++) {
 			this.lamp.setPostPipeline(BlurPostFX);
 		}

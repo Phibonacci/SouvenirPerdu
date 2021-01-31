@@ -3,13 +3,19 @@ export default class Lamp extends Phaser.GameObjects.Container {
 		super(scene, x, y);
 
 		this.isLit = false;
+		this.zoomFactor = 1.5;
 
 		this.switch = new Phaser.GameObjects.Sprite(scene, 50, 10, "lamp-switch");
-		this.switch.scale = 0.25;
+		this.switch.scale = 0.5;
 		this.add(this.switch);
 
+		this.light = new Phaser.GameObjects.Sprite(scene, 0, -140, "lamp-light");
+		this.light.scale = 0.5;
+		this.light.alpha = 0;
+		this.add(this.light);
+
 		this.sprite = new Phaser.GameObjects.Sprite(scene, 0, 0, "lamp");
-		this.sprite.scale = 0.2;
+		this.sprite.scale = 0.4;
 		this.add(this.sprite);
 
 		this.sprite.on("pointerdown", (pointer) => {
@@ -45,6 +51,7 @@ export default class Lamp extends Phaser.GameObjects.Container {
 				if (this.switch.y > 30) {
 					this.switch.y = 30;
 					this.isLit = true;
+					this.light.alpha = 0.25;
 					this.emit("selected");
 				}
 			}
