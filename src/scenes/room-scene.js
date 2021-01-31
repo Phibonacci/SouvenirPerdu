@@ -132,7 +132,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.tweens.add({
 				targets: this.spotlight_settings,
 				ray: 0.8,
-				duration: 4000,
+				duration: 8500,
 			});
 			this.selectedEntity = null;
 		}
@@ -141,7 +141,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.tweens.add({
 				targets: this.spotlight_settings,
 				ray: 2,
-				duration: 20000,
+				duration: 30000,
 			});
 			this.selectedEntity = null;
 		}

@@ -44,7 +44,16 @@ export default class BlurPostFX extends Phaser.Renderer.WebGL.Pipelines.PostFXPi
 	}
 
 	onPreRender() {
-		const dist = 2.5;
-		this.set2f("dist", dist / this.renderer.width, dist / this.renderer.height);
+		this._dist = 2.5;
+		this.set2f("dist", this._dist / this.renderer.width, this._dist / this.renderer.height);
+	}
+
+	get dist() {
+		return this._dist;
+	}
+
+	set dist(value) {
+		this._dist = value;
+		this.set2f("dist", value / this.renderer.width, value / this.renderer.height);
 	}
 }
