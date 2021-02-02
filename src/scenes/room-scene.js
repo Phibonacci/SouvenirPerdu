@@ -8,6 +8,7 @@ import Picture from "../entities/picture.js";
 import MusicPlayer from "../entities/music-player.js";
 import Narrator from "../entities/narrator.js";
 import Switch from "../entities/switch.js";
+import Television from "../entities/television.js";
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
 		super("Room");
@@ -30,6 +31,8 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("picture-blur", "assets/picture-blur.png");
 		this.load.image("switch-on", "assets/switch-on.png");
 		this.load.image("switch-off", "assets/switch-off.png");
+		this.load.image("television", "assets/television.png");
+		this.load.image("snow", "assets/snow.png");
 
 		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
@@ -146,7 +149,9 @@ export default class RoomScene extends Phaser.Scene {
 		this.padlock = new Padlock(this, 1620, 1050, "715").setVisible(false);
 		this.switch = new Switch(this, 820, 560).setVisible(false);
 
-		this.entities = [this.glasses, this.picture, this.lamp, this.notebook, this.padlock, this.switch];
+		this.television = new Television(this, 1590, 770);
+
+		this.entities = [this.glasses, this.picture, this.lamp, this.notebook, this.padlock, this.switch, this.television];
 	}
 
 	selectEntity(entity) {
@@ -213,6 +218,8 @@ export default class RoomScene extends Phaser.Scene {
 			this.padlock.setAlpha(0).setVisible(true);
 			this.picture.setAlpha(0).setVisible(true);
 			this.switch.setAlpha(0).setVisible(true);
+			this.television.setVisible(0);
+			//this.television.transparancy = 0;
 			this.tweens.add({
 				targets: this.notebook,
 				alpha: 1,
@@ -230,6 +237,12 @@ export default class RoomScene extends Phaser.Scene {
 				alpha: 1,
 				duration: 3000,
 				delay: 5500,
+			});
+			this.tweens.add({
+				targets: this.television,
+				transparancy: 1,
+				duration: 2000,
+				delay: 5000,
 			});
 
 			// Let there be light
@@ -284,6 +297,10 @@ export default class RoomScene extends Phaser.Scene {
 				delay: 1000,
 			});
 			this.unselectEntity();
+		}
+
+		if (entity == this.television) {
+			this.television.switch_state();
 		}
 	}
 
