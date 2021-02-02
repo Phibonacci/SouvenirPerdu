@@ -38,6 +38,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
 		this.load.audio("lamp", "assets/sfx/lamp.ogg");
 		this.load.audio("glasses", "assets/sfx/glasses.ogg");
+		this.load.audio("television", "assets/sfx/television.ogg");
 
 		MusicPlayer.preload(this);
 		Narrator.preload(this);
@@ -218,8 +219,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.padlock.setAlpha(0).setVisible(true);
 			this.picture.setAlpha(0).setVisible(true);
 			this.switch.setAlpha(0).setVisible(true);
-			this.television.setVisible(0);
-			//this.television.transparancy = 0;
+			this.television.setAlpha(0).setVisible(0);
 			this.tweens.add({
 				targets: this.notebook,
 				alpha: 1,
@@ -229,7 +229,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.tweens.add({
 				targets: this.padlock,
 				alpha: 1,
-				duration: 3000,
+				duration: 2000,
 				delay: 5500,
 			});
 			this.tweens.add({
@@ -240,9 +240,9 @@ export default class RoomScene extends Phaser.Scene {
 			});
 			this.tweens.add({
 				targets: this.television,
-				transparancy: 1,
-				duration: 2000,
-				delay: 5000,
+				alpha: 1,
+				duration: 1000,
+				delay: 7000,
 			});
 
 			// Let there be light
@@ -300,7 +300,7 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity == this.television) {
-			this.television.switch_state();
+			this.television.switchState();
 		}
 	}
 
