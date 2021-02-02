@@ -270,13 +270,6 @@ export default class RoomScene extends Phaser.Scene {
 					this.selectedEntity = null;
 					this.unselectEntity();
 
-					// Let there be light
-					this.tweens.add({
-						targets: this.spotlight_settings,
-						ray: 2,
-						duration: 30000,
-					});
-
 					// Play the last music track
 					this.musicPlayer.play(4);
 				},
@@ -285,11 +278,15 @@ export default class RoomScene extends Phaser.Scene {
 
 		if (entity === this.switch) {
 			this.switch.turnOn();
+
+			// Let there be light
 			this.tweens.add({
 				targets: this.spotlight_settings,
 				ray: 1.4,
 				duration: 20000,
 			});
+
+			// make picture appear
 			this.tweens.add({
 				targets: this.picture,
 				alpha: 1,
