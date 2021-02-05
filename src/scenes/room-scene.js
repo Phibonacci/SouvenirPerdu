@@ -9,6 +9,8 @@ import MusicPlayer from "../entities/music-player.js";
 import Narrator from "../entities/narrator.js";
 import Switch from "../entities/switch.js";
 import Television from "../entities/television.js";
+import ClosetDoor from "../entities/closet_door.js";
+import Videotape from "../entities/videotape.js";
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
 		super("Room");
@@ -33,12 +35,16 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("switch-off", "assets/switch-off.png");
 		this.load.image("television", "assets/television.png");
 		this.load.image("snow", "assets/snow.png");
+		this.load.image("closet-door-closed", "assets/closet-door-closed.png");
+		this.load.image("closet-door-opened", "assets/closet-door-opened.png");
+		this.load.image("videotape", "assets/videotape.png");
 
 		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
 		this.load.audio("lamp", "assets/sfx/lamp.ogg");
 		this.load.audio("glasses", "assets/sfx/glasses.ogg");
 		this.load.audio("television", "assets/sfx/television.ogg");
+		this.load.audio("closet-door", "assets/sfx/closet-door.ogg");
 
 		MusicPlayer.preload(this);
 		Narrator.preload(this);
@@ -58,6 +64,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.padlockOpen = this.sound.add("padlock-open");
 		this.lampSwitch = this.sound.add("lamp");
 		this.glassesTake = this.sound.add("glasses");
+		this.closetOpen = this.sound.add("closet-door");
 
 		this.narrator = new Narrator(this);
 
@@ -147,12 +154,23 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.picture = new Picture(this, 1730, 400).setVisible(false);
 		this.notebook = new Notebook(this, 1050, 990).setVisible(false);
-		this.padlock = new Padlock(this, 1620, 1050, "715").setVisible(false);
+		this.closet_door = new ClosetDoor(this, 2017, 1013).setVisible(false);
+		this.padlock = new Padlock(this, 1945, 1030, "715").setVisible(false);
 		this.switch = new Switch(this, 820, 560).setVisible(false);
-
+		this.videotape = new Videotape(this, 1974, 980).setVisible(false);
 		this.television = new Television(this, 1590, 770);
 
-		this.entities = [this.glasses, this.picture, this.lamp, this.notebook, this.padlock, this.switch, this.television];
+		this.entities = [
+			this.glasses,
+			this.picture,
+			this.lamp,
+			this.notebook,
+			this.closet_door,
+			this.padlock,
+			this.switch,
+			this.videotape,
+			this.television,
+		];
 	}
 
 	selectEntity(entity) {
@@ -219,7 +237,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.padlock.setAlpha(0).setVisible(true);
 			this.picture.setAlpha(0).setVisible(true);
 			this.switch.setAlpha(0).setVisible(true);
-			this.television.setAlpha(0).setVisible(0);
+			this.television.setAlpha(0).setVisible(true);
 			this.tweens.add({
 				targets: this.notebook,
 				alpha: 1,
@@ -229,8 +247,8 @@ export default class RoomScene extends Phaser.Scene {
 			this.tweens.add({
 				targets: this.padlock,
 				alpha: 1,
-				duration: 2000,
-				delay: 5500,
+				duration: 1000,
+				delay: 7000,
 			});
 			this.tweens.add({
 				targets: this.switch,
@@ -248,8 +266,8 @@ export default class RoomScene extends Phaser.Scene {
 			// Let there be light
 			this.tweens.add({
 				targets: this.spotlight_settings,
-				ray: 0.75,
-				duration: 8500,
+				ray: 0.8,
+				duration: 9000,
 			});
 		}
 
@@ -272,6 +290,13 @@ export default class RoomScene extends Phaser.Scene {
 
 					// Play the last music track
 					this.musicPlayer.play(4);
+					this.closet_door.setAlpha(0).setVisible(true);
+					this.tweens.add({
+						targets: this.closet_door,
+						alpha: 1,
+						duration: 1000,
+						delay: 0,
+					});
 				},
 			});
 		}
@@ -298,6 +323,17 @@ export default class RoomScene extends Phaser.Scene {
 
 		if (entity == this.television) {
 			this.television.switchState();
+		}
+
+		if (entity == this.closet_door) {
+			this.closetOpen.play();
+			this.videotape.setVisible(true);
+			this.tweens.add({
+				targets: this.videotape,
+				alpha: 1,
+				duration: 1000,
+				delay: 0,
+			});
 		}
 	}
 
