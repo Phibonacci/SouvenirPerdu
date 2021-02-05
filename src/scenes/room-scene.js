@@ -9,7 +9,7 @@ import MusicPlayer from "../entities/music-player.js";
 import Narrator from "../entities/narrator.js";
 import Switch from "../entities/switch.js";
 import Television from "../entities/television.js";
-import ClosetDoor from "../entities/closet_door.js";
+import ClosetDoor from "../entities/closet-door.js";
 import Videotape from "../entities/videotape.js";
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
