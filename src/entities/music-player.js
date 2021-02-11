@@ -36,6 +36,6 @@ export default class MusicPlayer {
 	}
 
 	stop() {
-		this.isPlaying = false;
+		this.loops.forEach((part) => part.forEach((music) => music.stop()));
 	}
 }

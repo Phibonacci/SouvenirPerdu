@@ -69,8 +69,14 @@ export default class RoomScene extends Phaser.Scene {
 		this.background.setInteractive();
 		this.background.setOrigin(0, 0);
 
-		this.spotlight = new SpotlightPostFX(this.game);
-		this.game.renderer.pipelines.add("Spotlight", this.spotlight);
+		if (game.renderer.pipelines.has("Spotlight")) {
+			this.spotlight = this.game.renderer.pipelines.get("Spotlight");
+			this.cameras.main.fadeFrom(3000, 255, 255, 255);
+		} else {
+			this.spotlight = new SpotlightPostFX(this.game);
+			this.game.renderer.pipelines.add("Spotlight", this.spotlight);
+		}
+
 		this.spotlight_settings = {
 			position: { x: 0, y: this.background.height - 200 },
 			ray: 0.25,
@@ -355,6 +361,11 @@ export default class RoomScene extends Phaser.Scene {
 	}
 
 	unselectEntity() {
+		if (this.selectedEntity === this.picture) {
+			this.fadeOutAndRestart();
+			return;
+		}
+
 		if (this.selectedEntity) {
 			this.selectedEntity.onUnselected();
 		}
@@ -370,6 +381,16 @@ export default class RoomScene extends Phaser.Scene {
 			} else {
 				this.camera_speed = 5000;
 			}
+		});
+	}
+
+	fadeOutAndRestart() {
+		this.musicPlayer.stop();
+		this.narrator.play("remember");
+		this.isLockedDueToAnimation = true;
+		this.cameras.main.fadeOut(3000, 255, 255, 255);
+		this.cameras.main.once("camerafadeoutcomplete", () => {
+			this.scene.restart();
 		});
 	}
 }
