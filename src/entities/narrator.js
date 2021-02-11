@@ -29,7 +29,11 @@ export default class Narrator {
 		}
 		this.played[voice] = true;
 
-		const sound = this.scene.sound.add(voice, { volume: 2.5 });
-		sound.play();
+		if (this.sound) {
+			this.sound.stop();
+		}
+
+		this.sound = this.scene.sound.add(voice, { volume: 2.5 });
+		this.sound.play();
 	}
 }
