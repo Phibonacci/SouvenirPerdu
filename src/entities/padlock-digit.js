@@ -5,7 +5,7 @@ export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 		super(padlock.scene, x, y, textureWidth, textureHeight / 10, "digits");
 		this.scale = 0.07;
 
-		this.sound = padlock.scene.sound.add("padlock-digit");
+		this.soundPlayer = padlock.scene.soundPlayer;
 		this.previousDigit = 0;
 
 		this.on("pointermove", (pointer) => {
@@ -58,7 +58,7 @@ export default class PadlockDigit extends Phaser.GameObjects.TileSprite {
 		if (this.previousDigit != digit) {
 			this.emit("digit-changed", digit);
 			this.previousDigit = digit;
-			this.sound.play();
+			this.soundPlayer.play("padlock-digit");
 		}
 	}
 }

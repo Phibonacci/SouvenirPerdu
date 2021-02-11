@@ -13,7 +13,11 @@ import ClosetDoor from "../entities/closet-door.js";
 import Videotape from "../entities/videotape.js";
 import Recorder from "../entities/recorder.js";
 import Calendar from "../entities/calendar.js";
+<<<<<<< HEAD
 
+=======
+import SoundPlayer from "../entities/sound-player.js";
+>>>>>>> Add a sound player and the wall switch sound
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
 		super("Room");
@@ -45,15 +49,9 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("recorder-on", "assets/recorder-on.png");
 		this.load.image("recorder-off", "assets/recorder-off.png");
 
-		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
-		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
-		this.load.audio("lamp", "assets/sfx/lamp.ogg");
-		this.load.audio("glasses", "assets/sfx/glasses.ogg");
-		this.load.audio("television", "assets/sfx/television.ogg");
-		this.load.audio("closet-door", "assets/sfx/closet-door.ogg");
-
 		MusicPlayer.preload(this);
 		Narrator.preload(this);
+		SoundPlayer.preload(this);
 	}
 
 	update_light() {
@@ -67,12 +65,8 @@ export default class RoomScene extends Phaser.Scene {
 		console.log("Creating the game...");
 
 		this.musicPlayer = new MusicPlayer(this);
-		this.padlockOpen = this.sound.add("padlock-open");
-		this.lampSwitch = this.sound.add("lamp");
-		this.glassesTake = this.sound.add("glasses");
-		this.closetOpen = this.sound.add("closet-door");
-
 		this.narrator = new Narrator(this);
+		this.soundPlayer = new SoundPlayer(this);
 
 		this.background = this.add.sprite(0, 0, "background");
 		this.background.setInteractive();
@@ -205,7 +199,7 @@ export default class RoomScene extends Phaser.Scene {
 	useEntity(entity) {
 		// Step 1: glasses -> lamp
 		if (entity === this.glasses) {
-			this.glassesTake.play();
+			this.soundPlayer.play("glasses");
 
 			this.isLockedDueToAnimation = true;
 			this.tweens.add({
@@ -235,7 +229,7 @@ export default class RoomScene extends Phaser.Scene {
 
 		// Step 2: lamp -> padlock
 		if (entity === this.lamp) {
-			this.lampSwitch.play();
+			this.soundPlayer.play("lamp");
 
 			// Zoom out
 			this.unselectEntity();
@@ -290,7 +284,7 @@ export default class RoomScene extends Phaser.Scene {
 
 		// Step 3: padlock
 		if (entity === this.padlock) {
-			this.padlockOpen.play();
+			this.soundPlayer.play("padlock-open");
 
 			this.isLockedDueToAnimation = true;
 			this.tweens.add({
@@ -319,6 +313,8 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity === this.switch) {
+			this.soundPlayer.play("wall-switch");
+
 			this.switch.turnOn();
 
 			// Let there be light
@@ -351,7 +347,7 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity == this.closetDoor) {
-			this.closetOpen.play();
+			this.soundPlayer.play("closet-door");
 			this.videotape.setVisible(true);
 			this.tweens.add({
 				targets: this.videotape,
