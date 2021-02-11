@@ -28,7 +28,6 @@ export default class MusicPlayer {
 	}
 
 	play(part) {
-		this.isPlayingBonus = false;
 		let seekTo = 0;
 		if (this.playing > 0) {
 			seekTo = this.loops[this.playing][0].playTime;
