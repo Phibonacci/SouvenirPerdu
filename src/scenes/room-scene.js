@@ -190,7 +190,7 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity === this.picture) {
-			this.narrator.play("picture-familiar");
+			this.narrator.play("picture-unknown");
 		}
 
 		this.cameras.main.zoomTo(entity.zoomFactor || 3.0, 2500, "Power1", true);

@@ -1,4 +1,4 @@
-const AVAILABLE_VOICES = ["mmmhh", "picture-familiar", "radio", "remember", "this-place", "715"];
+const AVAILABLE_VOICES = ["mmmhh", "picture-familiar", "picture-unknown", "radio", "remember", "this-place", "715"];
 
 export default class Narrator {
 	static preload(scene) {
