@@ -15,6 +15,7 @@ import Recorder from "../entities/recorder.js";
 import Calendar from "../entities/calendar.js";
 import SoundPlayer from "../entities/sound-player.js";
 import Pouet from "../entities/pouet.js";
+import Radio from "../entities/radio.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -48,6 +49,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("recorder-on", "assets/textures/recorder-on.png");
 		this.load.image("recorder-off", "assets/textures/recorder-off.png");
 		this.load.image("pouet", "assets/textures/pouet.png");
+		this.load.image("radio", "assets/textures/radio.png");
 
 		MusicPlayer.preload(this);
 		Narrator.preload(this);
@@ -168,6 +170,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.calendar = new Calendar(this, 2200, 480).setVisible(false);
 		this.television = new Television(this, 1590, 770);
 		this.pouet = new Pouet(this, 2300, 1600).setVisible(false);
+		this.radio = new Radio(this, 2600, 700).setVisible(false);
 
 		this.entities = [
 			this.glasses,
@@ -182,6 +185,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.calendar,
 			this.television,
 			this.pouet,
+			this.radio,
 		];
 	}
 
@@ -360,6 +364,15 @@ export default class RoomScene extends Phaser.Scene {
 				alpha: 1,
 				duration: 1500,
 				delay: 2000,
+			});
+
+			// make the radio appear
+			this.radio.setAlpha(0).setVisible(true);
+			this.tweens.add({
+				targets: this.radio,
+				alpha: 1,
+				duration: 1500,
+				delay: 6500,
 			});
 
 			this.unselectEntity();

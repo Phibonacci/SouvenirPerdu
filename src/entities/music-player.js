@@ -22,6 +22,9 @@ export default class MusicPlayer {
 		];
 
 		this.loops = names.map((part) => part.map((name) => this.scene.sound.add(name)));
+
+		this.bonus = this.scene.sound.add("bonus-savannah");
+		this.isPlayingBonus = false;
 	}
 
 	play(part) {
@@ -31,11 +34,23 @@ export default class MusicPlayer {
 		}
 
 		this.playing = part;
+		this.bonus.stop();
 		this.loops.forEach((part) => part.forEach((music) => music.stop()));
 		this.loops[part - 1].forEach((music) => music.play({ loop: true, volume: 0.1, seek: seekTo }));
 	}
 
+	toggleBonusMusic() {
+		this.isPlayingBonus = !this.isPlayingBonus;
+		if (this.isPlayingBonus) {
+			this.stop();
+			this.bonus.play({ loop: true, volume: 0.15 });
+		} else {
+			this.play(this.playing);
+		}
+	}
+
 	stop() {
+		this.bonus.stop();
 		this.loops.forEach((part) => part.forEach((music) => music.stop()));
 	}
 }
