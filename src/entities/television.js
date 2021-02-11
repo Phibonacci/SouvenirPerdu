@@ -3,7 +3,7 @@ export default class Television extends Phaser.GameObjects.Container {
 		super(scene, x, y);
 
 		this.television_noise = scene.sound.add("television");
-		this.zoomFactor = 1.8;
+		this.zoomFactor = 2.0;
 
 		this.television = new Phaser.GameObjects.Sprite(scene, 0, 0, "television");
 		this.television.scale = 0.5;

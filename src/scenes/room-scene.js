@@ -11,7 +11,9 @@ import Switch from "../entities/switch.js";
 import Television from "../entities/television.js";
 import ClosetDoor from "../entities/closet-door.js";
 import Videotape from "../entities/videotape.js";
+import Recorder from "../entities/recorder.js";
 import Calendar from "../entities/calendar.js";
+
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
 		super("Room");
@@ -39,7 +41,9 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("closet-door-closed", "assets/closet-door-closed.png");
 		this.load.image("closet-door-opened", "assets/closet-door-opened.png");
 		this.load.image("videotape", "assets/videotape.png");
-		this.load.image("calendar", "assets/calendar_july.png");
+		this.load.image("calendar", "assets/calendar-july.png");
+		this.load.image("recorder-on", "assets/recorder-on.png");
+		this.load.image("recorder-off", "assets/recorder-off.png");
 
 		this.load.audio("padlock-open", "assets/sfx/padlock-open.ogg");
 		this.load.audio("padlock-digit", "assets/sfx/padlock-digit.ogg");
@@ -156,10 +160,11 @@ export default class RoomScene extends Phaser.Scene {
 
 		this.picture = new Picture(this, 1730, 400).setVisible(false);
 		this.notebook = new Notebook(this, 1050, 990).setVisible(false);
-		this.closet_door = new ClosetDoor(this, 2017, 1013).setVisible(false);
+		this.closetDoor = new ClosetDoor(this, 2017, 1013).setVisible(false);
 		this.padlock = new Padlock(this, 1945, 1030, "715").setVisible(false);
 		this.switch = new Switch(this, 820, 560).setVisible(false);
 		this.videotape = new Videotape(this, 1974, 980).setVisible(false);
+		this.recorder = new Recorder(this, 1568, 930).setVisible(false);
 		this.calendar = new Calendar(this, 2200, 480).setVisible(false);
 		this.television = new Television(this, 1590, 770);
 
@@ -168,10 +173,11 @@ export default class RoomScene extends Phaser.Scene {
 			this.picture,
 			this.lamp,
 			this.notebook,
-			this.closet_door,
+			this.closetDoor,
 			this.padlock,
 			this.switch,
 			this.videotape,
+			this.recorder,
 			this.calendar,
 			this.television,
 		];
@@ -242,6 +248,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.picture.setAlpha(0).setVisible(true);
 			this.switch.setAlpha(0).setVisible(true);
 			this.television.setAlpha(0).setVisible(true);
+			this.recorder.setAlpha(0).setVisible(true);
 			this.tweens.add({
 				targets: this.notebook,
 				alpha: 1,
@@ -265,6 +272,12 @@ export default class RoomScene extends Phaser.Scene {
 				alpha: 1,
 				duration: 1000,
 				delay: 7000,
+			});
+			this.tweens.add({
+				targets: this.recorder,
+				alpha: 1,
+				duration: 1000,
+				delay: 6000,
 			});
 
 			// Let there be light
@@ -294,9 +307,9 @@ export default class RoomScene extends Phaser.Scene {
 
 					// Play the last music track
 					this.musicPlayer.play(4);
-					this.closet_door.setAlpha(0).setVisible(true);
+					this.closetDoor.setAlpha(0).setVisible(true);
 					this.tweens.add({
-						targets: this.closet_door,
+						targets: this.closetDoor,
 						alpha: 1,
 						duration: 1000,
 						delay: 0,
@@ -337,7 +350,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.television.switchState();
 		}
 
-		if (entity == this.closet_door) {
+		if (entity == this.closetDoor) {
 			this.closetOpen.play();
 			this.videotape.setVisible(true);
 			this.tweens.add({
