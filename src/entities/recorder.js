@@ -4,6 +4,7 @@ export default class Recorder extends Phaser.GameObjects.Sprite {
 
 		this.scale = 0.332;
 		this.zoomFactor = 2.9;
+		this.tapeInputEnabled = false;
 
 		this.setInteractive({ useHandCursor: true });
 
@@ -31,6 +32,14 @@ export default class Recorder extends Phaser.GameObjects.Sprite {
 				}
 			}
 		});
+	}
+
+	enableVideotapeInput() {
+		this.tapeInputEnabled = true;
+	}
+
+	isVideoTapeInputEnabled() {
+		return this.tapeInputEnabled;
 	}
 
 	onSelected() {
