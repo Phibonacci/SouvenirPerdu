@@ -1,4 +1,15 @@
-const AVAILABLE_VOICES = ["mmmhh", "picture-familiar", "picture-unknown", "radio", "remember", "this-place", "715"];
+const AVAILABLE_VOICES = [
+	"715",
+	"calendar",
+	"mmmhh",
+	"picture-familiar",
+	"picture-unknown",
+	"radio",
+	"remember",
+	"this-place",
+	"videotape-unknown",
+	"videotape-ready",
+];
 
 export default class Narrator {
 	static preload(scene) {
@@ -12,8 +23,8 @@ export default class Narrator {
 		this.played = {};
 	}
 
-	play(voice) {
-		if (this.played[voice]) {
+	play(voice, canPlayMoreThanOnce) {
+		if (this.played[voice] && !canPlayMoreThanOnce) {
 			return;
 		}
 		this.played[voice] = true;

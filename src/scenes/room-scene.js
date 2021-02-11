@@ -385,6 +385,7 @@ export default class RoomScene extends Phaser.Scene {
 			// Understand what the date is about
 			this.calendar.disableInputOnZoom();
 			this.videotape.enableTapeAcquisition();
+			this.narrator.play("calendar");
 		}
 
 		if (entity === this.videotape) {
@@ -393,6 +394,9 @@ export default class RoomScene extends Phaser.Scene {
 				this.videotape.destroy();
 				this.selectedEntity = null;
 				this.unselectEntity();
+				this.narrator.play("videotape-ready", true);
+			} else {
+				this.narrator.play("videotape-unknown", true);
 			}
 		}
 
