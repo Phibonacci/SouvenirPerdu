@@ -403,6 +403,8 @@ export default class RoomScene extends Phaser.Scene {
 
 		if (entity === this.recorder) {
 			if (this.recorder.isVideoTapeInputEnabled()) {
+				this.soundPlayer.play("videotape");
+
 				this.recorder.insertVideoTape();
 				this.television.setImageToWedding();
 				this.television.turnOn();
