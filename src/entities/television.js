@@ -10,10 +10,10 @@ export default class Television extends Phaser.GameObjects.Container {
 		this.television.setVisible(false);
 		this.add(this.television);
 
-		this.snow = new Phaser.GameObjects.Sprite(scene, -14.6, 22.8, "snow");
-		this.snow.scale = 0.176;
-		this.snow.setVisible(false);
-		this.add(this.snow);
+		this.tvImage = new Phaser.GameObjects.Sprite(scene, -14.6, 22.8, "snow");
+		this.tvImage.scale = 0.176;
+		this.tvImage.setVisible(false);
+		this.add(this.tvImage);
 
 		this.television.on("pointerdown", (pointer) => {
 			if (pointer.leftButtonDown()) {
@@ -30,6 +30,11 @@ export default class Television extends Phaser.GameObjects.Container {
 		});
 	}
 
+	setImageToMariage() {
+		this.isMariage = true;
+		this.tvImage.setTexture("wedding");
+	}
+
 	onSelected() {}
 
 	onUnselected() {
@@ -42,8 +47,8 @@ export default class Television extends Phaser.GameObjects.Container {
 	}
 
 	switchState() {
-		this.snow.setVisible(!this.snow.visible);
-		if (this.snow.visible) {
+		this.tvImage.setVisible(!this.tvImage.visible);
+		if (this.tvImage.visible) {
 			this.television_noise.play({ loop: true, volume: 0.5 });
 		} else {
 			this.television_noise.stop();

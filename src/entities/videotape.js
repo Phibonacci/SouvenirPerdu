@@ -5,6 +5,7 @@ export default class Videotape extends Phaser.GameObjects.Sprite {
 		this.zoomFactor = 5.5;
 		this.scale = 0.1;
 		this.setInteractive({ useHandCursor: true });
+		this.acquisitionEnabled = false;
 
 		this.on("pointerover", () => {
 			this.tint = 0x808080;
@@ -19,6 +20,14 @@ export default class Videotape extends Phaser.GameObjects.Sprite {
 				this.emit("selected");
 			}
 		});
+	}
+
+	enableTapeAcquisition() {
+		this.acquisitionEnabled = true;
+	}
+
+	isAcquisitionEnabled() {
+		return this.acquisitionEnabled;
 	}
 
 	onSelected() {}

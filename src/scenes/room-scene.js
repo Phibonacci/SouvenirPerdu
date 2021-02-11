@@ -39,6 +39,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("switch-off", "assets/switch-off.png");
 		this.load.image("television", "assets/television.png");
 		this.load.image("snow", "assets/snow.png");
+		this.load.image("wedding", "assets/wedding.png");
 		this.load.image("closet-door-closed", "assets/closet-door-closed.png");
 		this.load.image("closet-door-opened", "assets/closet-door-opened.png");
 		this.load.image("videotape", "assets/videotape.png");
@@ -345,11 +346,11 @@ export default class RoomScene extends Phaser.Scene {
 			this.unselectEntity();
 		}
 
-		if (entity == this.television) {
+		if (entity === this.television) {
 			this.television.switchState();
 		}
 
-		if (entity == this.closetDoor) {
+		if (entity === this.closetDoor) {
 			this.videotape.setVisible(true);
 			this.tweens.add({
 				targets: this.videotape,
@@ -357,6 +358,26 @@ export default class RoomScene extends Phaser.Scene {
 				duration: 1000,
 				delay: 0,
 			});
+		}
+
+		if (entity === this.calendar) {
+			this.calendar.disableInputOnZoom();
+			this.videotape.enableTapeAcquisition();
+		}
+
+		if (entity === this.videotape) {
+			if (this.videotape.isAcquisitionEnabled()) {
+				this.recorder.enableVideotapeInput();
+				this.videotape.destroy();
+				this.selectedEntity = null;
+				this.unselectEntity();
+			}
+		}
+
+		if (entity === this.recorder) {
+			if (this.recorder.isVideoTapeInputEnabled()) {
+				this.television.setImageToMariage();
+			}
 		}
 	}
 

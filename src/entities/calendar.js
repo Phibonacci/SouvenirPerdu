@@ -4,6 +4,7 @@ export default class Calendar extends Phaser.GameObjects.Sprite {
 
 		this.scale = 0.7;
 		this.zoomFactor = 1.7;
+		this.inputOnZoom = true;
 		this.setInteractive({ useHandCursor: true });
 
 		this.on("pointerover", () => {
@@ -21,7 +22,15 @@ export default class Calendar extends Phaser.GameObjects.Sprite {
 		});
 	}
 
-	onSelected() {}
+	disableInputOnZoom() {
+		this.inputOnZoom = false;
+	}
 
-	onUnselected() {}
+	onSelected() {
+		this.input.enabled = this.inputOnZoom;
+	}
+
+	onUnselected() {
+		this.input.enabled = true;
+	}
 }
