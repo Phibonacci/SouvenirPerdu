@@ -4,6 +4,7 @@ export default class ClosetDoor extends Phaser.GameObjects.Sprite {
 
 		this.scale = 0.7;
 		this.zoomFactor = 2.9;
+		this.inputOnZoom = true;
 
 		this.setInteractive({ useHandCursor: true });
 
@@ -25,6 +26,8 @@ export default class ClosetDoor extends Phaser.GameObjects.Sprite {
 					this.emit("selected");
 					if (this.texture.key == "closet-door-closed") {
 						this.setTexture("closet-door-opened");
+						scene.soundPlayer.play("closet-door");
+						this.inputOnZoom = false;
 					}
 				} else {
 					this.emit("selected");
@@ -35,9 +38,11 @@ export default class ClosetDoor extends Phaser.GameObjects.Sprite {
 
 	onSelected() {
 		this.isSelected = true;
+		this.input.enabled = this.inputOnZoom;
 	}
 
 	onUnselected() {
 		this.isSelected = false;
+		this.input.enabled = true;
 	}
 }

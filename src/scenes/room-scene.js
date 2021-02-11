@@ -344,7 +344,6 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity == this.closetDoor) {
-			this.soundPlayer.play("closet-door");
 			this.videotape.setVisible(true);
 			this.tweens.add({
 				targets: this.videotape,

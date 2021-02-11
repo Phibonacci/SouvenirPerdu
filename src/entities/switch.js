@@ -4,6 +4,7 @@ export default class Switch extends Phaser.GameObjects.Sprite {
 
 		this.scale = 0.1;
 		this.setInteractive({ useHandCursor: true });
+		this.inputOnZoom = true;
 
 		this.on("pointerover", () => {
 			this.tint = 0x808080;
@@ -22,9 +23,14 @@ export default class Switch extends Phaser.GameObjects.Sprite {
 
 	turnOn() {
 		this.setTexture("switch-on");
+		this.inputOnZoom = false;
 	}
 
-	onSelected() {}
+	onSelected() {
+		this.input.enabled = this.inputOnZoom;
+	}
 
-	onUnselected() {}
+	onUnselected() {
+		this.input.enabled = true;
+	}
 }

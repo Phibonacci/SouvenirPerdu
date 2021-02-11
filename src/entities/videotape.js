@@ -2,6 +2,7 @@ export default class Videotape extends Phaser.GameObjects.Sprite {
 	constructor(scene, x, y) {
 		super(scene, x, y, "videotape");
 
+		this.zoomFactor = 5.5;
 		this.scale = 0.1;
 		this.setInteractive({ useHandCursor: true });
 
