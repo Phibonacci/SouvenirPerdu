@@ -317,8 +317,9 @@ export default class RoomScene extends Phaser.Scene {
 					this.selectedEntity = null;
 					this.unselectEntity();
 
-					// Play the last music track
-					this.musicPlayer.play(4);
+					// Play the 3rd music track
+					this.musicPlayer.play(3);
+
 					this.closetDoor.setAlpha(0).setVisible(true);
 					this.tweens.add({
 						targets: this.closetDoor,
@@ -378,6 +379,10 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity === this.calendar) {
+			// Zoom out
+			this.unselectEntity();
+
+			// Understand what the date is about
 			this.calendar.disableInputOnZoom();
 			this.videotape.enableTapeAcquisition();
 		}
@@ -396,6 +401,9 @@ export default class RoomScene extends Phaser.Scene {
 				this.recorder.insertVideoTape();
 				this.television.setImageToWedding();
 				this.television.turnOn();
+
+				// Play the final music track
+				this.musicPlayer.play(4);
 			}
 		}
 	}
