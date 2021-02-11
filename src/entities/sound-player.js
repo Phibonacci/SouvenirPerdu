@@ -8,6 +8,9 @@ const SOUNDS = [
 	"closet-door",
 	"all-piano",
 	"videotape",
+	"pouet-claire",
+	"pouet-louca",
+	"pouet-marie",
 ];
 
 export default class SoundPlayer {
@@ -24,5 +27,10 @@ export default class SoundPlayer {
 	play(name) {
 		const sound = this.scene.sound.add(name, { volume: 1.0 });
 		sound.play();
+	}
+
+	playRandomPouet() {
+		const pouets = SOUNDS.filter(x => x.startsWith("pouet"));
+		this.play(pouets[Math.floor(Math.random() * pouets.length)]);
 	}
 }

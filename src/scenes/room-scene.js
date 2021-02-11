@@ -14,6 +14,7 @@ import Videotape from "../entities/videotape.js";
 import Recorder from "../entities/recorder.js";
 import Calendar from "../entities/calendar.js";
 import SoundPlayer from "../entities/sound-player.js";
+import Pouet from "../entities/pouet.js";
 
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
@@ -46,6 +47,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.load.image("calendar", "assets/calendar-july.png");
 		this.load.image("recorder-on", "assets/recorder-on.png");
 		this.load.image("recorder-off", "assets/recorder-off.png");
+		this.load.image("pouet", "assets/pouet.png");
 
 		MusicPlayer.preload(this);
 		Narrator.preload(this);
@@ -165,6 +167,7 @@ export default class RoomScene extends Phaser.Scene {
 		this.recorder = new Recorder(this, 1568, 930).setVisible(false);
 		this.calendar = new Calendar(this, 2200, 480).setVisible(false);
 		this.television = new Television(this, 1590, 770);
+		this.pouet = new Pouet(this, 2300, 1600).setVisible(false);
 
 		this.entities = [
 			this.glasses,
@@ -178,6 +181,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.recorder,
 			this.calendar,
 			this.television,
+			this.pouet,
 		];
 	}
 
@@ -243,10 +247,10 @@ export default class RoomScene extends Phaser.Scene {
 
 			this.notebook.setAlpha(0).setVisible(true);
 			this.padlock.setAlpha(0).setVisible(true);
-			this.picture.setAlpha(0).setVisible(true);
 			this.switch.setAlpha(0).setVisible(true);
 			this.television.setAlpha(0).setVisible(true);
 			this.recorder.setAlpha(0).setVisible(true);
+			this.pouet.setAlpha(0).setVisible(true);
 			this.tweens.add({
 				targets: this.notebook,
 				alpha: 1,
@@ -276,6 +280,12 @@ export default class RoomScene extends Phaser.Scene {
 				alpha: 1,
 				duration: 1000,
 				delay: 6000,
+			});
+			this.tweens.add({
+				targets: this.pouet,
+				alpha: 1,
+				duration: 1000,
+				delay: 7300,
 			});
 
 			// Let there be light
@@ -328,6 +338,7 @@ export default class RoomScene extends Phaser.Scene {
 				duration: 20000,
 			});
 
+			// make calendar appear
 			this.calendar.setAlpha(0).setVisible(true);
 			this.tweens.add({
 				targets: this.calendar,
@@ -337,12 +348,14 @@ export default class RoomScene extends Phaser.Scene {
 			});
 
 			// make picture appear
+			this.picture.setAlpha(0).setVisible(true);
 			this.tweens.add({
 				targets: this.picture,
 				alpha: 1,
 				duration: 1500,
 				delay: 2000,
 			});
+
 			this.unselectEntity();
 		}
 
