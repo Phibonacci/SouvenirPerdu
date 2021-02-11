@@ -200,6 +200,7 @@ export default class RoomScene extends Phaser.Scene {
 		if (entity === this.picture) {
 			if (this.television.hasSeenWedding()) {
 				this.narrator.play("picture-familiar");
+				this.picture.remember();
 			} else {
 				this.narrator.play("picture-unknown");
 			}

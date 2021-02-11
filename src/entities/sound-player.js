@@ -12,6 +12,7 @@ const SOUNDS = [
 	"pouet-louca",
 	"pouet-marie",
 	"pouet-maxou",
+	"pouet-jean",
 ];
 
 export default class SoundPlayer {
