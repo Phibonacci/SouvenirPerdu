@@ -7,6 +7,7 @@ const SOUNDS = [
 	"television",
 	"closet-door",
 	"all-piano",
+	"videotape",
 ];
 
 export default class SoundPlayer {
