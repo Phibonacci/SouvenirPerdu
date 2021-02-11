@@ -22,16 +22,13 @@ export default class Recorder extends Phaser.GameObjects.Sprite {
 
 		this.on("pointerup", (pointer) => {
 			if (pointer.button === 0) {
-				if (this.isSelected) {
-					this.emit("selected");
-					if (this.texture.key == "recorder-off") {
-						this.setTexture("recorder-on");
-					}
-				} else {
-					this.emit("selected");
-				}
+				this.emit("selected");
 			}
 		});
+	}
+
+	insertVideoTape() {
+		this.setTexture("recorder-on");
 	}
 
 	enableVideotapeInput() {
@@ -42,11 +39,7 @@ export default class Recorder extends Phaser.GameObjects.Sprite {
 		return this.tapeInputEnabled;
 	}
 
-	onSelected() {
-		this.isSelected = true;
-	}
+	onSelected() {}
 
-	onUnselected() {
-		this.isSelected = false;
-	}
+	onUnselected() {}
 }

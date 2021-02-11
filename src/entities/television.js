@@ -4,6 +4,7 @@ export default class Television extends Phaser.GameObjects.Container {
 
 		this.television_noise = scene.sound.add("television");
 		this.zoomFactor = 2.0;
+		this.isWedding = false;
 
 		this.television = new Phaser.GameObjects.Sprite(scene, 0, 0, "television");
 		this.television.scale = 0.5;
@@ -30,9 +31,13 @@ export default class Television extends Phaser.GameObjects.Container {
 		});
 	}
 
-	setImageToMariage() {
-		this.isMariage = true;
+	setImageToWedding() {
+		this.isWedding = true;
 		this.tvImage.setTexture("wedding");
+	}
+
+	hasSeenWedding() {
+		return this.isWedding;
 	}
 
 	onSelected() {}
@@ -46,12 +51,22 @@ export default class Television extends Phaser.GameObjects.Container {
 		this.television.setInteractive({ useHandCursor: true });
 	}
 
+	turnOn() {
+		this.tvImage.setVisible(true);
+		this.television_noise.play({ loop: true, volume: 0.5 });
+	}
+
+	turnOff() {
+		this.tvImage.setVisible(false);
+		this.television_noise.stop();
+	}
+
 	switchState() {
 		this.tvImage.setVisible(!this.tvImage.visible);
 		if (this.tvImage.visible) {
-			this.television_noise.play({ loop: true, volume: 0.5 });
+			this.turnOn();
 		} else {
-			this.television_noise.stop();
+			this.turnOff();
 		}
 	}
 }

@@ -198,7 +198,11 @@ export default class RoomScene extends Phaser.Scene {
 		}
 
 		if (entity === this.picture) {
-			this.narrator.play("picture-unknown");
+			if (this.television.hasSeenWedding()) {
+				this.narrator.play("picture-familiar");
+			} else {
+				this.narrator.play("picture-unknown");
+			}
 		}
 
 		this.cameras.main.zoomTo(entity.zoomFactor || 3.0, 2500, "Power1", true);
@@ -343,7 +347,7 @@ export default class RoomScene extends Phaser.Scene {
 			this.tweens.add({
 				targets: this.calendar,
 				alpha: 1,
-				duration: 3000,
+				duration: 1500,
 				delay: 5000,
 			});
 
@@ -389,15 +393,19 @@ export default class RoomScene extends Phaser.Scene {
 
 		if (entity === this.recorder) {
 			if (this.recorder.isVideoTapeInputEnabled()) {
-				this.television.setImageToMariage();
+				this.recorder.insertVideoTape();
+				this.television.setImageToWedding();
+				this.television.turnOn();
 			}
 		}
 	}
 
 	unselectEntity() {
 		if (this.selectedEntity === this.picture) {
-			this.fadeOutAndRestart();
-			return;
+			if (this.television.hasSeenWedding()) {
+				this.fadeOutAndRestart();
+				return;
+			}
 		}
 
 		if (this.selectedEntity) {
@@ -420,6 +428,7 @@ export default class RoomScene extends Phaser.Scene {
 
 	fadeOutAndRestart() {
 		this.musicPlayer.stop();
+		this.television.turnOff();
 		this.narrator.play("remember");
 		this.isLockedDueToAnimation = true;
 		this.cameras.main.fadeOut(3000, 255, 255, 255);
