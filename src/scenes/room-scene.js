@@ -13,11 +13,8 @@ import ClosetDoor from "../entities/closet-door.js";
 import Videotape from "../entities/videotape.js";
 import Recorder from "../entities/recorder.js";
 import Calendar from "../entities/calendar.js";
-<<<<<<< HEAD
-
-=======
 import SoundPlayer from "../entities/sound-player.js";
->>>>>>> Add a sound player and the wall switch sound
+
 export default class RoomScene extends Phaser.Scene {
 	constructor() {
 		super("Room");
