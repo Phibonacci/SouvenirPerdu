@@ -11,6 +11,7 @@ const SOUNDS = [
 	"pouet-claire",
 	"pouet-louca",
 	"pouet-marie",
+	"pouet-maxou",
 ];
 
 export default class SoundPlayer {
@@ -30,7 +31,7 @@ export default class SoundPlayer {
 	}
 
 	playRandomPouet() {
-		const pouets = SOUNDS.filter(x => x.startsWith("pouet"));
+		const pouets = SOUNDS.filter((x) => x.startsWith("pouet"));
 		this.play(pouets[Math.floor(Math.random() * pouets.length)]);
 	}
 }
